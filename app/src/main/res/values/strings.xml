@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Android Exercise</string>
+    <string name="name">Name</string>
+    <string name="add1">Address Line 1</string>
+    <string name="add2">Address Line 2</string>
+    <string name="landmark">Landmark</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="pincode">Pincode</string>
+    <string name="check_default">Make this my default address</string>
+    <string name="demo_address">Harshit Singh\nHouse No. 12 B, Grand Aveneue, \nNoida, Uttar Pradesh, \n 201301</string>
+</resources>
