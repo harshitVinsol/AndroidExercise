@@ -174,27 +174,27 @@ class AddAddresses : AppCompatActivity() {
      */
     private fun validateInput(): Boolean {
         if (name.text.toString().isBlank()) {
-            name.error = "Add a proper name"
+            name_input_layout.error = "Enter a proper name"
             name.requestFocus()
             return false
         } else if (add1.text.toString().isBlank()) {
-            add1.error = "Add a proper Address"
+            add1_input_layout.error = "Enter a proper Address"
             add1.requestFocus()
             return false
         } else if (add2.text.toString().isBlank()) {
-            add2.error = "Add a proper Address"
+            add2_input_layout.error = "Enter a proper Address"
             add2.requestFocus()
             return false
         } else if (city.text.toString().isBlank()) {
-            city.error = "Add a proper City"
+            city_input_layout.error = "Enter a proper City"
             city.requestFocus()
             return false
         } else if (state.text.toString().isBlank()) {
-            state.error = "Add a proper State"
+            state_input_layout.error = "Enter a proper State"
             state.requestFocus()
             return false
         } else if (pincode.text.toString().length != 6) {
-            pincode.error = "Add a proper Pincode"
+            pincode_input_layout.error = "Enter a proper Pincode"
             pincode.requestFocus()
             return false
         } else return true

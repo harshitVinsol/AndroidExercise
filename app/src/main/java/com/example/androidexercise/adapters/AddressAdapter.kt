@@ -21,7 +21,7 @@ import retrofit2.Response
 /*
 Class AddressAdapter to be used in RecyclerView for showing addresses having list of Address and context of Activity called from
  */
-class AddressAdapter(val addressList: List<Address> , val mContext: Context) : RecyclerView.Adapter<ViewHolder>(){
+class AddressAdapter(val addressList: MutableList<Address> , val mContext: Context) : RecyclerView.Adapter<ViewHolder>(){
     /*
     function to attach a layout to the ViewHolder
      */
@@ -66,10 +66,14 @@ class AddressAdapter(val addressList: List<Address> , val mContext: Context) : R
                     }
 
                     R.id.setting_delete ->{
-                        deleteAddress(address.id)
+                        val flagDelete = deleteAddress(address.id)
+                        if(flagDelete){
+                            addressList.removeAt(holder.adapterPosition)
+                            notifyDataSetChanged()
+                        }
                         true
                     }
-
+                    
                     else -> false
                 }
             }
@@ -78,10 +82,10 @@ class AddressAdapter(val addressList: List<Address> , val mContext: Context) : R
     /*
     function to Delete the address from pop up Menu by calling deleteAddress(id) from AddressService
      */
-    private fun deleteAddress(id: Int){
+    private fun deleteAddress(id: Int): Boolean{
         val addressService = ServiceBuilder.buildService(AddressService::class.java)
         val requestCall = addressService.deleteAddress(id)
-
+        var flagDelete = false
         requestCall.enqueue(object : Callback<Unit>{
             override fun onFailure(call: Call<Unit>, t: Throwable) {
                 Toast.makeText(mContext, "Failed to Delete Address", Toast.LENGTH_SHORT).show()
@@ -90,12 +94,19 @@ class AddressAdapter(val addressList: List<Address> , val mContext: Context) : R
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if(response.isSuccessful){
                     Toast.makeText(mContext, "Address Deleted Successfully", Toast.LENGTH_SHORT).show()
+                    flagDelete = true
+                    /*
+                    val intent = Intent(mContext, Addresses::class.java)
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                    startActivity(mContext, intent, null)
+                     */
                 }
                 else{
                     Toast.makeText(mContext, "Failed to Delete Address : "+ response.code().toString(), Toast.LENGTH_SHORT).show()
                 }
             }
         })
+        return flagDelete
     }
     /*
     function to Update the address from pop up menu sending an intent to AddAddress activity to input the updated fields

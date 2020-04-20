@@ -11,7 +11,7 @@ interface AddressService{
     GET request to return the list of All the Addresses
      */
     @GET("addresses?token=52e04d83e87e509f07982e6ac851e2d2c67d1d0eabc4fe78")
-    fun getAddressList() : Call<List<Address>>
+    fun getAddressList() : Call<MutableList<Address>>
     /*
     POST request to write an Address
      */

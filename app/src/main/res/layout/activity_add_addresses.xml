@@ -15,105 +15,156 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/name"
-                android:hint="@string/name"
-                android:textSize="24sp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"/>
+                app:errorEnabled="true">
 
-            <EditText
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/name"
+                    android:hint="@string/name"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/muli_regular"
+                    android:textColor="@color/grey" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add1_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/add1"
-                android:hint="@string/add1"
-                android:textSize="24sp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                app:errorEnabled="true">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/add1"
+                    android:hint="@string/add1"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/muli_regular"
+                    android:textColor="@color/grey"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/add2_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/add2"
-                android:id="@+id/add2"
-                android:textSize="24sp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                app:errorEnabled="true">
 
-            <EditText
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add2"
+                    android:id="@+id/add2"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/muli_regular"
+                    android:textColor="@color/grey"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/landmark_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/landmark"
-                android:hint="@string/landmark"
-                android:textSize="24sp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                app:errorEnabled="true">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/landmark"
+                    android:hint="@string/landmark"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/muli_regular"
+                    android:textColor="@color/grey"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/city_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/city"
-                android:hint="@string/city"
-                android:textSize="24sp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                app:errorEnabled="true">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/city"
+                    android:hint="@string/city"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/muli_regular"
+                    android:textColor="@color/grey"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/state_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/state"
-                android:hint="@string/state"
-                android:textSize="24sp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                app:errorEnabled="true">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/state"
+                    android:hint="@string/state"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/muli_regular"
+                    android:textColor="@color/grey"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/pincode_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/pincode"
-                android:hint="@string/pincode"
-                android:inputType="number"
-                android:maxLength="6"
-                android:textSize="24sp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"/>
+                app:errorEnabled="true">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pincode"
+                    android:hint="@string/pincode"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/muli_regular"
+                    android:textColor="@color/grey"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
                 android:id="@+id/check_default"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/check_default"
+                android:textSize="14sp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/muli_regular"
+                android:textColor="@color/grey"/>
 
             <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="40dp"
+                android:layout_width="125dp"
+                android:layout_height="37.5dp"
                 android:id="@+id/button_add"
                 android:src="@drawable/ic_arrow_forward_white_24dp"
                 android:background="@color/button_next"
                 android:layout_gravity="right"
                 android:layout_marginRight="40dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"/>
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/muli_regular"
+                android:textColor="@color/grey"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
