@@ -29,11 +29,11 @@ lateinit var DEFAULT_ID: String
 const val INTENT_KEY = "CalledTo"
 /*
 An Activity to show all the Addresses available using a recycler view and Adding an Address using a floating action button
- */
+*/
 class Addresses : AppCompatActivity() {
     private lateinit var addressRecyclerView : RecyclerView
     private lateinit var addressLayout : ConstraintLayout
-    private lateinit var foaLayoutParams : ConstraintLayout.LayoutParams
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addresses)
@@ -52,27 +52,23 @@ class Addresses : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
         address_foa_bottom.isInvisible = false
         val defaultSharedPref = getSharedPreferences(DEFAULT_SHARED_PREF, Context.MODE_PRIVATE)
         DEFAULT_ID = defaultSharedPref.getInt(DEFAULT_KEY,0).toString()
+
         loadAddress()
-        if(addressRecyclerView.adapter?.itemCount == 0){
-            add_book_blank.isInvisible = false
-            kindly_add_address.isInvisible = false
-            address_foa_centre.isInvisible = false
-            address_foa_bottom.isInvisible = true
-            address_foa_centre.setOnClickListener {
-                val intent = Intent(this, AddAddresses::class.java)
-                intent.putExtra(INTENT_KEY, "add")
-                startActivity(intent)
-            }
+        address_foa_centre.setOnClickListener {
+            val intent = Intent(this, AddAddresses::class.java)
+            intent.putExtra(INTENT_KEY, "add")
+            startActivity(intent)
         }
     }
     /*
     function to Load all the available addresses by calling a GET by getAddressList() of AddressService and assigning the list of
     all the available addresses to the addressRecylerView
      */
-    private fun loadAddress(){
+    public fun loadAddress(){
         val addressService = ServiceBuilder.buildService(AddressService::class.java)
         val requestCall = addressService.getAddressList()
 
@@ -80,7 +76,6 @@ class Addresses : AppCompatActivity() {
             override fun onFailure(call: Call<MutableList<Address>>, t: Throwable) {
                 Toast.makeText(this@Addresses, "Failed to load addresses", Toast.LENGTH_SHORT).show()
             }
-
             override fun onResponse(
                 call: Call<MutableList<Address>>,
                 response: Response<MutableList<Address>>
@@ -88,13 +83,17 @@ class Addresses : AppCompatActivity() {
                 if(response.isSuccessful){
                     val addressList = response.body() as MutableList<Address>
                     addressRecyclerView.adapter = AddressAdapter(addressList, baseContext)
+                    if(addressRecyclerView.adapter?.itemCount == 0){
+                        address_foa_bottom.isInvisible = true
+                        add_book_blank.isInvisible = false
+                        kindly_add_address.isInvisible = false
+                        address_foa_centre.isInvisible = false
+                    }
                 }
                 else{
                     Toast.makeText(this@Addresses, "Failed to load addresses : "+ response.code().toString(), Toast.LENGTH_SHORT).show()
                 }
             }
-
         })
-
     }
 }

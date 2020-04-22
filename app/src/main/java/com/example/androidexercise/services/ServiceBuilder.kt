@@ -5,7 +5,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 /*
 An object class ServiceBuilder to enable the App to use Retrofit to fire REST Api calls
- */
+*/
 object ServiceBuilder {
     private const val URL = "https://shop-spree.herokuapp.com/api/ams/user/"
     private val okHttp : OkHttpClient.Builder = OkHttpClient.Builder()

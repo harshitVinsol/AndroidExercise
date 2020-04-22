@@ -66,11 +66,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
                     }
 
                     R.id.setting_delete ->{
-                        val flagDelete = deleteAddress(address.id)
-                        if(flagDelete){
-                            addressList.removeAt(holder.adapterPosition)
-                            notifyDataSetChanged()
-                        }
+                        deleteAddress(address.id, holder.adapterPosition)
                         true
                     }
                     
@@ -82,10 +78,10 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
     /*
     function to Delete the address from pop up Menu by calling deleteAddress(id) from AddressService
      */
-    private fun deleteAddress(id: Int): Boolean{
+    private fun deleteAddress(id: Int, position: Int){
         val addressService = ServiceBuilder.buildService(AddressService::class.java)
         val requestCall = addressService.deleteAddress(id)
-        var flagDelete = false
+
         requestCall.enqueue(object : Callback<Unit>{
             override fun onFailure(call: Call<Unit>, t: Throwable) {
                 Toast.makeText(mContext, "Failed to Delete Address", Toast.LENGTH_SHORT).show()
@@ -94,19 +90,19 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if(response.isSuccessful){
                     Toast.makeText(mContext, "Address Deleted Successfully", Toast.LENGTH_SHORT).show()
-                    flagDelete = true
-                    /*
-                    val intent = Intent(mContext, Addresses::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
-                    startActivity(mContext, intent, null)
-                     */
+
+                    addressList.removeAt(position)
+                    notifyDataSetChanged()
+                    if(addressList.size == 0){
+                        val add = Addresses()
+                        add.loadAddress()
+                    }
                 }
                 else{
                     Toast.makeText(mContext, "Failed to Delete Address : "+ response.code().toString(), Toast.LENGTH_SHORT).show()
                 }
             }
         })
-        return flagDelete
     }
     /*
     function to Update the address from pop up menu sending an intent to AddAddress activity to input the updated fields
