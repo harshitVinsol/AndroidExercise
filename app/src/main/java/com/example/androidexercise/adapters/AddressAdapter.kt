@@ -14,6 +14,7 @@ import com.example.androidexercise.*
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
+import kotlinx.android.synthetic.main.activity_addresses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -93,6 +94,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
 
                     addressList.removeAt(position)
                     notifyDataSetChanged()
+                    
                     if(addressList.size == 0){
                         val add = Addresses()
                         add.loadAddress()

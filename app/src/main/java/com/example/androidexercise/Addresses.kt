@@ -41,8 +41,7 @@ class Addresses : AppCompatActivity() {
         addressRecyclerView = findViewById(R.id.address_recycler)
         addressRecyclerView.layoutManager = LinearLayoutManager(this)
 
-        addressLayout = findViewById(R.id.addresses_layout)
-
+        address_foa_bottom.isInvisible = false
         address_foa_bottom.setOnClickListener {
             val intent = Intent(this, AddAddresses::class.java)
             intent.putExtra(INTENT_KEY, "add")
@@ -53,7 +52,6 @@ class Addresses : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        address_foa_bottom.isInvisible = false
         val defaultSharedPref = getSharedPreferences(DEFAULT_SHARED_PREF, Context.MODE_PRIVATE)
         DEFAULT_ID = defaultSharedPref.getInt(DEFAULT_KEY,0).toString()
 
@@ -68,7 +66,7 @@ class Addresses : AppCompatActivity() {
     function to Load all the available addresses by calling a GET by getAddressList() of AddressService and assigning the list of
     all the available addresses to the addressRecylerView
      */
-    public fun loadAddress(){
+    fun loadAddress(){
         val addressService = ServiceBuilder.buildService(AddressService::class.java)
         val requestCall = addressService.getAddressList()
 
