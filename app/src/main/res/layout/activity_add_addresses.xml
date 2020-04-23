@@ -127,7 +127,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:counterEnabled="true"
+                app:counterMaxLength="6">
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

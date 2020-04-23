@@ -29,11 +29,24 @@ class AddAddresses : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_addresses)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val calledTo = intent.getStringExtra(INTENT_KEY)
+        if(calledTo.equals("update")){
+            val address = intent.getBundleExtra("address")
+            name.setText(address.get("name").toString())
+            add1.setText(address.get("add1").toString())
+            add2.setText(address.get("add2").toString())
+            landmark.setText("Landmark")
+            city.setText(address.get("city").toString())
+            state.setText(address.get("state").toString())
+            pincode.setText(address.get("pincode").toString())
+
+        }
         /*
         To check if the button has been clicked to Add or Update an Address by Intent
          */
         button_add.setOnClickListener {
-            val calledTo = intent.getStringExtra(INTENT_KEY)
+            button_add.isClickable = false
             val id = intent.getIntExtra("id",0)
 
             if(calledTo.equals("add")){
@@ -48,6 +61,7 @@ class AddAddresses : AppCompatActivity() {
     funtion to Update the address by id and calling a PUT request using updateAddressById() of AddressService
      */
     private fun updateAddress(id: Int){
+
         if(validateInput()){
             val mAddress = Address(
                 300,
@@ -105,6 +119,9 @@ class AddAddresses : AppCompatActivity() {
                     }
                 }
             })
+        }
+        else{
+            button_add.isClickable = true
         }
     }
     /*
@@ -168,35 +185,86 @@ class AddAddresses : AppCompatActivity() {
                 }
             })
         }
+        else{
+            button_add.isClickable = true
+        }
     }
     /*
     A Boolean function to validate the EditText of AddAddress Layout
      */
-    private fun validateInput(): Boolean {
-        if (name.text.toString().isBlank()) {
+    private fun validateInput() =
+        if (!validateName() || !validateAddress1() || !validateAddress2() || !validateCity() || !validateState() || !validatePincode()) false else true
+
+
+    private fun validateName() : Boolean{
+        if(name.text.toString().isBlank()){
             name_input_layout.error = "Enter a proper name"
             name.requestFocus()
             return false
-        } else if (add1.text.toString().isBlank()) {
+        }
+        else{
+            name_input_layout.error = null
+            return true
+        }
+    }
+
+    private fun validateAddress1() : Boolean{
+        if(add1.text.toString().isBlank()){
             add1_input_layout.error = "Enter a proper Address"
             add1.requestFocus()
             return false
-        } else if (add2.text.toString().isBlank()) {
+        }
+        else{
+            add1_input_layout.error = null
+            return true
+        }
+    }
+
+    private fun validateAddress2() : Boolean{
+        if(add1.text.toString().isBlank()){
             add2_input_layout.error = "Enter a proper Address"
             add2.requestFocus()
             return false
-        } else if (city.text.toString().isBlank()) {
+        }
+        else{
+            add2_input_layout.error = null
+            return true
+        }
+    }
+
+    private fun validateCity() : Boolean{
+        if(city.text.toString().isBlank()){
             city_input_layout.error = "Enter a proper City"
             city.requestFocus()
             return false
-        } else if (state.text.toString().isBlank()) {
+        }
+        else{
+            city_input_layout.error = null
+            return true
+        }
+    }
+
+    private fun validateState() : Boolean{
+        if(state.text.toString().isBlank()){
             state_input_layout.error = "Enter a proper State"
             state.requestFocus()
             return false
-        } else if (pincode.text.toString().length != 6) {
-            pincode_input_layout.error = "Enter a proper Pincode"
+        }
+        else{
+            state_input_layout.error = null
+            return true
+        }
+    }
+
+    private fun validatePincode() : Boolean{
+        if(pincode.text.toString().length != 6){
+            pincode_input_layout.error = "Enter a proper Pincode of six digits"
             pincode.requestFocus()
             return false
-        } else return true
+        }
+        else{
+            pincode_input_layout.error = null
+            return true
+        }
     }
 }

@@ -2,19 +2,20 @@ package com.example.androidexercise.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexercise.*
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
-import kotlinx.android.synthetic.main.activity_addresses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,7 +63,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             popUpMenu.setOnMenuItemClickListener {
                 when(it.itemId){
                     R.id.setting_update -> {
-                        updateAddress(address.id)
+                        updateAddress(address.id, address)
                         true
                     }
 
@@ -76,6 +77,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             }
         }
     }
+
     /*
     function to Delete the address from pop up Menu by calling deleteAddress(id) from AddressService
      */
@@ -94,10 +96,11 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
 
                     addressList.removeAt(position)
                     notifyDataSetChanged()
-                    
+
                     if(addressList.size == 0){
-                        val add = Addresses()
-                        add.loadAddress()
+                        val intent = Intent(mContext, Addresses::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                        startActivity(mContext, intent, null)
                     }
                 }
                 else{
@@ -109,11 +112,20 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
     /*
     function to Update the address from pop up menu sending an intent to AddAddress activity to input the updated fields
      */
-    private fun updateAddress(id: Int){
+    private fun updateAddress(id: Int, address: Address){
+        val add: Bundle = bundleOf(
+            "name" to address.firstname,
+            "add1" to address.address1,
+            "add2" to address.address2,
+            "city" to address.city,
+            "state" to address.state_name,
+            "pincode" to address.zipcode
+        )
         val intent = Intent(mContext, AddAddresses::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
         intent.putExtra(INTENT_KEY, "update")
         intent.putExtra("id", id)
+        intent.putExtra("address", add)
         startActivity(mContext, intent, null)
     }
 }
