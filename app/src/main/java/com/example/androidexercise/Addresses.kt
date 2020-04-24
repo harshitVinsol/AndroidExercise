@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.*
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,18 +27,6 @@ class Addresses : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addresses)
 
-        address_recycler.layoutManager = LinearLayoutManager(this)
-        address_foa_bottom.setOnClickListener {
-            val intent = Intent(this, AddAddresses::class.java)
-            intent.putExtra(INTENT_KEY, "add")
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-
         val defaultSharedPref = getSharedPreferences(DEFAULT_SHARED_PREF, Context.MODE_PRIVATE)
         DEFAULT_ID = defaultSharedPref.getInt(DEFAULT_KEY,0).toString()
 
@@ -46,14 +35,9 @@ class Addresses : AppCompatActivity() {
         if(address_recycler.adapter?.itemCount == 0){
             changeFab()
         }
-
-        address_foa_centre.setOnClickListener {
-            val intent = Intent(this, AddAddresses::class.java)
-            intent.putExtra(INTENT_KEY, "add")
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-        }
+        address_recycler.layoutManager = LinearLayoutManager(this)
     }
+
     /*
     function to Load all the available addresses by calling a GET by getAddressList() of AddressService and assigning the list of
     all the available addresses to the addressRecylerView
@@ -98,5 +82,14 @@ class Addresses : AppCompatActivity() {
         add_book_blank.isInvisible = false
         kindly_add_address.isInvisible = false
         address_foa_centre.isInvisible = false
+    }
+    /*
+    A function to control onClick of both the Floating action buttons i.e. center and bottom
+     */
+    public fun onFabClick(view : View){
+        val intent = Intent(this, AddAddresses::class.java)
+        intent.putExtra(INTENT_KEY, "add")
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
     }
 }
