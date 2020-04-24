@@ -16,23 +16,21 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-lateinit var DEFAULT_ID: String
+var DEFAULT_ID: String? = null
 const val INTENT_KEY = "CalledTo"
 /*
 An Activity to show all the Addresses available using a recycler view and Adding an Address using a floating action button
 */
 class Addresses : AppCompatActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addresses)
 
         address_recycler.layoutManager = LinearLayoutManager(this)
-
-        address_foa_bottom.isInvisible = false
         address_foa_bottom.setOnClickListener {
             val intent = Intent(this, AddAddresses::class.java)
             intent.putExtra(INTENT_KEY, "add")
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
     }
@@ -52,16 +50,10 @@ class Addresses : AppCompatActivity() {
         address_foa_centre.setOnClickListener {
             val intent = Intent(this, AddAddresses::class.java)
             intent.putExtra(INTENT_KEY, "add")
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         }
-
     }
-    /*
-    private fun loadAddress1() : Call<MutableList<Address>> {
-        val addressService = ServiceBuilder.buildService(AddressService::class.java)
-        return addressService.getAddressList()
-    }
-     */
     /*
     function to Load all the available addresses by calling a GET by getAddressList() of AddressService and assigning the list of
     all the available addresses to the addressRecylerView
@@ -88,6 +80,9 @@ class Addresses : AppCompatActivity() {
                     if(address_recycler.adapter?.itemCount == 0){
                         changeFab()
                     }
+                    else{
+                        address_foa_bottom.isInvisible = false
+                    }
                 }
                 else{
                     Toast.makeText(this@Addresses, "Failed to load addresses : "+ response.code().toString(), Toast.LENGTH_SHORT).show()
@@ -95,7 +90,9 @@ class Addresses : AppCompatActivity() {
             }
         })
     }
-
+    /*
+    function to change the Floating action button if the addressList is empty
+     */
     fun changeFab(){
         address_foa_bottom.isInvisible = true
         add_book_blank.isInvisible = false

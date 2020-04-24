@@ -20,9 +20,11 @@ interface AddressService{
     fun addAddressToList(
         @Field("address[firstname]") first: String,
         @Field("address[address1]") add1: String,
+        @Field("address[address2]") add2: String,
         @Field("address[city]") city: String,
         @Field("address[country_id]") country: Int?,
-        @Field("address[state_id]") state: Int?,
+        @Field("address[state_name]") stateName: String,
+        @Field("address[state_id]") stateId: Int?,
         @Field("address[zipcode]") pincode: String?,
         @Field("address[phone]") phone: String?
         ) : Call<Address>

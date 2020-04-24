@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexercise.*
 import com.example.androidexercise.models.Address
@@ -42,12 +43,12 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val address = addressList[position]
-        val str = address.firstname + "\n" + address.address1 + ",\n" + address.city + ",\n" + address.zipcode
+        val str = address.firstname + "\n" + address.address1 + ", "+ address.address2+ ",\n" + address.city + ",\n" + address.zipcode
         holder.textAddress.text = str
         /*
-        To check if the Address is Default Address and set deafult tick visible if true
+        To check if the Address is Default Address and set default tick visible if true
          */
-        val id= DEFAULT_ID.toInt()
+        val id = DEFAULT_ID?.toInt()
         if(address.id == id){
             holder.defaultAddress.isInvisible = false
         }
@@ -68,6 +69,10 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
                     }
 
                     R.id.setting_delete ->{
+                        if(address.id == DEFAULT_ID?.toInt()){
+                            DEFAULT_ID = null
+                            holder.defaultAddress.isInvisible = true
+                        }
                         deleteAddress(address.id, holder.adapterPosition)
                         true
                     }
@@ -93,13 +98,15 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if(response.isSuccessful){
                     Toast.makeText(mContext, "Address Deleted Successfully", Toast.LENGTH_SHORT).show()
-
+                    if(id == DEFAULT_ID?.toInt()) {
+                        DEFAULT_ID = null
+                    }
                     addressList.removeAt(position)
                     notifyDataSetChanged()
 
                     if(addressList.size == 0){
                         val intent = Intent(mContext, Addresses::class.java)
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(mContext, intent, null)
                     }
                 }
@@ -122,7 +129,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             "pincode" to address.zipcode
         )
         val intent = Intent(mContext, AddAddresses::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra(INTENT_KEY, "update")
         intent.putExtra("id", id)
         intent.putExtra("address", add)

@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,21 +34,14 @@ class AddAddresses : AppCompatActivity() {
 
         val calledTo = intent.getStringExtra(INTENT_KEY)
         if(calledTo.equals("update")){
-            val address = intent.getBundleExtra("address")
-            name.setText(address.get("name").toString())
-            add1.setText(address.get("add1").toString())
-            add2.setText(address.get("add2").toString())
-            landmark.setText("Landmark")
-            city.setText(address.get("city").toString())
-            state.setText(address.get("state").toString())
-            pincode.setText(address.get("pincode").toString())
-
+            setUpdateFields()
         }
         /*
         To check if the button has been clicked to Add or Update an Address by Intent
          */
         button_add.setOnClickListener {
-            button_add.isClickable = false
+            validateAll()
+            button_add.isEnabled = false
             val id = intent.getIntExtra("id",0)
 
             if(calledTo.equals("add")){
@@ -56,6 +51,7 @@ class AddAddresses : AppCompatActivity() {
                 updateAddress(id)
             }
         }
+        validateOnChange()
     }
     /*
     funtion to Update the address by id and calling a PUT request using updateAddressById() of AddressService
@@ -111,6 +107,7 @@ class AddAddresses : AppCompatActivity() {
                             }
                         }
                         val intent = Intent(this@AddAddresses, Addresses::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
                     }
@@ -121,7 +118,7 @@ class AddAddresses : AppCompatActivity() {
             })
         }
         else{
-            button_add.isClickable = true
+            button_add.isEnabled = true
         }
     }
     /*
@@ -147,8 +144,10 @@ class AddAddresses : AppCompatActivity() {
             val requestCall = addressService.addAddressToList(
                 mAddress.firstname,
                 mAddress.address1,
+                mAddress.address2,
                 mAddress.city,
                 mAddress.country_id,
+                mAddress.state_name,
                 mAddress.state_id,
                 mAddress.zipcode,
                 "2221"
@@ -176,6 +175,7 @@ class AddAddresses : AppCompatActivity() {
                             }
                         }
                         val intent = Intent(this@AddAddresses, Addresses::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
                     }
@@ -186,7 +186,7 @@ class AddAddresses : AppCompatActivity() {
             })
         }
         else{
-            button_add.isClickable = true
+            button_add.isEnabled = true
         }
     }
     /*
@@ -194,8 +194,9 @@ class AddAddresses : AppCompatActivity() {
      */
     private fun validateInput() =
         if (!validateName() || !validateAddress1() || !validateAddress2() || !validateCity() || !validateState() || !validatePincode()) false else true
-
-
+    /*
+    A Boolean function to validate the name field
+     */
     private fun validateName() : Boolean{
         if(name.text.toString().isBlank()){
             name_input_layout.error = "Enter a proper name"
@@ -207,7 +208,9 @@ class AddAddresses : AppCompatActivity() {
             return true
         }
     }
-
+    /*
+    A Boolean function to validate the Address Line 1 field
+     */
     private fun validateAddress1() : Boolean{
         if(add1.text.toString().isBlank()){
             add1_input_layout.error = "Enter a proper Address"
@@ -219,7 +222,9 @@ class AddAddresses : AppCompatActivity() {
             return true
         }
     }
-
+    /*
+    A Boolean function to validate the Address Line 2 field
+     */
     private fun validateAddress2() : Boolean{
         if(add1.text.toString().isBlank()){
             add2_input_layout.error = "Enter a proper Address"
@@ -231,7 +236,9 @@ class AddAddresses : AppCompatActivity() {
             return true
         }
     }
-
+    /*
+    A Boolean function to validate the City field
+     */
     private fun validateCity() : Boolean{
         if(city.text.toString().isBlank()){
             city_input_layout.error = "Enter a proper City"
@@ -243,7 +250,9 @@ class AddAddresses : AppCompatActivity() {
             return true
         }
     }
-
+    /*
+    A Boolean function to validate the State field
+     */
     private fun validateState() : Boolean{
         if(state.text.toString().isBlank()){
             state_input_layout.error = "Enter a proper State"
@@ -255,7 +264,9 @@ class AddAddresses : AppCompatActivity() {
             return true
         }
     }
-
+    /*
+    A Boolean function to validate the Pincode field
+     */
     private fun validatePincode() : Boolean{
         if(pincode.text.toString().length != 6){
             pincode_input_layout.error = "Enter a proper Pincode of six digits"
@@ -266,5 +277,74 @@ class AddAddresses : AppCompatActivity() {
             pincode_input_layout.error = null
             return true
         }
+    }
+
+    private fun setUpdateFields(){
+        val address = intent.getBundleExtra("address")
+        name.setText(address?.get("name").toString())
+        add1.setText(address?.get("add1").toString())
+
+        if(address?.get("add2") == null){
+            add2.setText("Your Address Line 2")
+        }
+        else {
+            add2.setText(address.get("add2").toString())
+        }
+
+        landmark.setText("Landmark")
+        city.setText(address?.get("city").toString())
+
+        if(address?.get("state") == null){
+            state.setText("Your State")
+        }
+        else {
+            state.setText(address?.get("state").toString())
+        }
+
+        pincode.setText(address?.get("pincode").toString())
+    }
+    /*
+    An extension function of EditText that takes a lambda function
+     */
+    fun EditText.onChange(cb: (String) -> Unit) {
+        this.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(s: Editable?) { cb(s.toString()) }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+    /*
+    A function to validate the fields onChange()
+     */
+    private fun validateOnChange(){
+        name.onChange {
+            validateName()
+        }
+        add1.onChange {
+            validateAddress1()
+        }
+        add2.onChange {
+            validateAddress2()
+        }
+        city.onChange {
+            validateCity()
+        }
+        state.onChange {
+            validateState()
+        }
+        pincode.onChange {
+            validatePincode()
+        }
+    }
+    /*
+    A function to validate all fields
+     */
+    private fun validateAll(){
+        validateName()
+        validateAddress1()
+        validateAddress2()
+        validateCity()
+        validateState()
+        validatePincode()
     }
 }
