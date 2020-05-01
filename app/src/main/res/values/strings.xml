@@ -11,4 +11,7 @@
     <string name="demo_address">Harshit Singh\nHouse No. 12 B, Grand Aveneue, \nNoida, Uttar Pradesh, \n 201301</string>
     <string name="your_address">Your address book is blank</string>
     <string name="kindly_add_address">Kindly add shipping / billing\n address and enjoy faster\n checkout</string>
+    <string name="add_line_2">Your Address Line 2</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
 </resources>

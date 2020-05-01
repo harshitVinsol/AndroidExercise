@@ -11,7 +11,6 @@ import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexercise.*
 import com.example.androidexercise.models.Address
@@ -56,7 +55,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
         Creating a Pop up menu to Update or Delete the Address
          */
         holder.settingsButton.setOnClickListener{
-            val popUpMenu: PopupMenu = PopupMenu(mContext, holder.settingsButton)
+            val popUpMenu = PopupMenu(mContext, holder.settingsButton)
             val inflater: MenuInflater = popUpMenu.menuInflater
             inflater.inflate(R.menu.setting_menu, popUpMenu.menu)
             popUpMenu.show()
@@ -106,7 +105,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
 
                     if(addressList.size == 0){
                         val intent = Intent(mContext, Addresses::class.java)
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(mContext, intent, null)
                     }
                 }
@@ -129,7 +128,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             "pincode" to address.zipcode
         )
         val intent = Intent(mContext, AddAddresses::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra(INTENT_KEY, "update")
         intent.putExtra("id", id)
         intent.putExtra("address", add)

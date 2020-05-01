@@ -30,6 +30,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/name"
                     android:hint="@string/name"
+                    android:inputType="text"
                     android:textSize="16sp"
                     android:fontFamily="@font/muli_regular"
                     android:textColor="@color/grey" />
@@ -49,6 +50,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/add1"
                     android:hint="@string/add1"
+                    android:inputType="text"
                     android:textSize="16sp"
                     android:fontFamily="@font/muli_regular"
                     android:textColor="@color/grey"/>
@@ -66,6 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/add2"
+                    android:inputType="text"
                     android:id="@+id/add2"
                     android:textSize="16sp"
                     android:fontFamily="@font/muli_regular"
@@ -83,6 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/landmark"
+                    android:inputType="text"
                     android:hint="@string/landmark"
                     android:textSize="16sp"
                     android:fontFamily="@font/muli_regular"
@@ -101,6 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/city"
+                    android:inputType="text"
                     android:hint="@string/city"
                     android:textSize="16sp"
                     android:fontFamily="@font/muli_regular"
@@ -119,6 +124,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/state"
+                    android:inputType="text"
                     android:hint="@string/state"
                     android:textSize="16sp"
                     android:fontFamily="@font/muli_regular"
@@ -135,7 +141,7 @@
                 app:errorEnabled="true"
                 app:counterEnabled="true"
                 app:counterMaxLength="6">
-                <com.google.android.material.textfield.TextInputEditText
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/pincode"
@@ -144,7 +150,8 @@
                     android:maxLength="6"
                     android:textSize="16sp"
                     android:fontFamily="@font/muli_regular"
-                    android:textColor="@color/grey"/>
+                    android:textColor="@color/grey"
+                    android:imeOptions="actionDone"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox

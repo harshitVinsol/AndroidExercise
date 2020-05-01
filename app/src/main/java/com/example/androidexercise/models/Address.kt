@@ -1,7 +1,12 @@
 package com.example.androidexercise.models
+
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
 /*
 Model data class Address to give a format to the address
  */
+@Parcelize
 data class Address(
     val id: Int,
     val firstname: String,
@@ -14,4 +19,4 @@ data class Address(
     val company: String?,
     val state_id: Int?,
     val country_id: Int?
-)
+) : Parcelable
