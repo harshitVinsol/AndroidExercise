@@ -13,6 +13,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexercise.*
+import com.example.androidexercise.Addresses.Companion.INTENT_KEY
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
@@ -47,7 +48,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
         /*
         To check if the Address is Default Address and set default tick visible if true
          */
-        if(address.id == DEFAULT_ID){
+        if(address.id == Addresses.DEFAULT_ID){
             holder.defaultAddress.isInvisible = false
         }
         /*
@@ -67,8 +68,8 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
                     }
 
                     R.id.setting_delete ->{
-                        if(address.id == DEFAULT_ID){
-                            DEFAULT_ID = 0
+                        if(address.id == Addresses.DEFAULT_ID){
+                            Addresses.DEFAULT_ID = 0
                             holder.defaultAddress.isInvisible = true
                         }
                         deleteAddress(address.id, holder.adapterPosition)
@@ -96,8 +97,8 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if(response.isSuccessful){
                     Toast.makeText(mContext, "Address Deleted Successfully", Toast.LENGTH_SHORT).show()
-                    if(id == DEFAULT_ID) {
-                        DEFAULT_ID = 0
+                    if(id == Addresses.DEFAULT_ID) {
+                        Addresses.DEFAULT_ID = 0
                     }
                     addressList.removeAt(position)
                     notifyDataSetChanged()

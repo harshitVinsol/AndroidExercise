@@ -9,6 +9,8 @@ import android.widget.*
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.androidexercise.AddAddresses.Companion.DEFAULT_KEY
+import com.example.androidexercise.AddAddresses.Companion.DEFAULT_SHARED_PREF
 import com.example.androidexercise.adapters.AddressAdapter
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
@@ -18,16 +20,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-var DEFAULT_ID: Int = 0
-const val INTENT_KEY = "CalledTo"
-const val ADDRESS_LIST = "addressList"
 /*
 An Activity to show all the Addresses available using a recycler view and Adding an Address using a floating action button
 */
 class Addresses : AppCompatActivity() {
     companion object{
+        const val INTENT_KEY = "CalledTo"
+        private const val ADDRESS_LIST = "addressList"
         private lateinit var listOfAddress : ArrayList<Address>
         private var LIST_LOADED = false
+        var DEFAULT_ID: Int = 0
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +82,7 @@ class Addresses : AppCompatActivity() {
         requestCall.enqueue(object : Callback<MutableList<Address>>{
             override fun onFailure(call: Call<MutableList<Address>>, t: Throwable) {
                 Toast.makeText(this@Addresses, "Failed to load addresses", Toast.LENGTH_SHORT).show()
+                LIST_LOADED = false
             }
             override fun onResponse(
                 call: Call<MutableList<Address>>,
@@ -99,6 +102,7 @@ class Addresses : AppCompatActivity() {
                     }
                 }
                 else{
+                    LIST_LOADED = false
                     Toast.makeText(this@Addresses, "Failed to load addresses : "+ response.code().toString(), Toast.LENGTH_SHORT).show()
                 }
             }
@@ -125,7 +129,7 @@ class Addresses : AppCompatActivity() {
     /*
     A function to control onClick of both the Floating action buttons i.e. center and bottom
      */
-    public fun onFabClick(view : View){
+    fun onFabClick(view : View){
         val intent = Intent(this, AddAddresses::class.java)
         intent.putExtra(INTENT_KEY, "add")
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

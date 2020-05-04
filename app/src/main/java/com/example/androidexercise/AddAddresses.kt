@@ -9,6 +9,8 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.*
+import com.example.androidexercise.Addresses.Companion.DEFAULT_ID
+import com.example.androidexercise.Addresses.Companion.INTENT_KEY
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
@@ -16,14 +18,14 @@ import kotlinx.android.synthetic.main.activity_add_addresses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-
-const val DEFAULT_SHARED_PREF= "DefaultKeySharedPref"
-const val DEFAULT_KEY= "DefaultKey"
 /*
 An activity to Add and Update the Addresses
  */
 class AddAddresses : AppCompatActivity() {
-
+    companion object{
+        const val DEFAULT_SHARED_PREF= "DefaultKeySharedPref"
+        const val DEFAULT_KEY= "DefaultKey"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_addresses)
@@ -55,14 +57,12 @@ class AddAddresses : AppCompatActivity() {
         /*
         Enabling Enter/DONE to submit form on pincode EditText
          */
-        pincode.setOnEditorActionListener(object : TextView.OnEditorActionListener{
-            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
-                if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)){
-                    button_add.performClick()
-                }
-                return false
+        pincode.setOnEditorActionListener { v, actionId, event ->
+            if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)){
+                button_add.performClick()
             }
-        })
+            false
+        }
     }
     /*
     function to Update the address by id and calling a PUT request using updateAddressById() of AddressService
