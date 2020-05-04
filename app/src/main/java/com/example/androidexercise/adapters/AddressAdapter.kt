@@ -68,8 +68,8 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
                     }
 
                     R.id.setting_delete ->{
-                        if(address.id == DEFAULT_ID?.toInt()){
-                            DEFAULT_ID = null
+                        if(address.id == DEFAULT_ID){
+                            DEFAULT_ID = 0
                             holder.defaultAddress.isInvisible = true
                         }
                         deleteAddress(address.id, holder.adapterPosition)
@@ -97,8 +97,8 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if(response.isSuccessful){
                     Toast.makeText(mContext, "Address Deleted Successfully", Toast.LENGTH_SHORT).show()
-                    if(id == DEFAULT_ID?.toInt()) {
-                        DEFAULT_ID = null
+                    if(id == DEFAULT_ID) {
+                        DEFAULT_ID = 0
                     }
                     addressList.removeAt(position)
                     notifyDataSetChanged()

@@ -32,7 +32,7 @@ class AddAddresses : AppCompatActivity() {
         val calledTo = intent.getStringExtra(INTENT_KEY)
         val id = intent.getIntExtra("id",0)
         if(calledTo == "update"){
-            if(id == DEFAULT_ID?.toInt()) {
+            if(id == DEFAULT_ID) {
                 check_default.isChecked = true
             }
             setUpdateFields()
@@ -117,10 +117,10 @@ class AddAddresses : AppCompatActivity() {
                             }
                         }
                         else{
-                            if(DEFAULT_ID?.toInt() == newAddress?.id) {
+                            if(DEFAULT_ID == newAddress?.id) {
                                 editor.putInt(DEFAULT_KEY, 0)
                                 editor.apply()
-                                DEFAULT_ID = 0.toString()
+                                DEFAULT_ID = 0
                             }
                         }
                         val intent = Intent(this@AddAddresses, Addresses::class.java)

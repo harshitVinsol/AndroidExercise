@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.os.PersistableBundle
 import android.view.View
 import android.widget.*
@@ -21,62 +22,59 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-var DEFAULT_ID: String? = null
+var DEFAULT_ID: Int = 0
 const val INTENT_KEY = "CalledTo"
+const val ADDRESS_LIST = "addressList"
 /*
 An Activity to show all the Addresses available using a recycler view and Adding an Address using a floating action button
 */
 class Addresses : AppCompatActivity() {
-    private lateinit var listOfAddress: ArrayList<Address>
-
+    companion object{
+        lateinit var listOfAddress : ArrayList<Address>
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addresses)
 
-        progress_circular_address.isVisible = true
         val defaultSharedPref = getSharedPreferences(DEFAULT_SHARED_PREF, Context.MODE_PRIVATE)
-        DEFAULT_ID = defaultSharedPref.getInt(DEFAULT_KEY, 0).toString()
+        DEFAULT_ID = defaultSharedPref.getInt(DEFAULT_KEY, 0)
 
-        loadAddress()
+        val listOfAddressOrientation = savedInstanceState?.getParcelableArrayList<Address>(ADDRESS_LIST)
 
+        address_recycler.layoutManager = LinearLayoutManager(this)
+
+        if(savedInstanceState == null){
+            progress_circular_address.isVisible = true
+            loadAddress()
+        }
+        else{
+            if(listOfAddressOrientation != null){
+                address_recycler.adapter = AddressAdapter(listOfAddressOrientation as MutableList<Address>, this)
+                progress_circular_address.isVisible = true
+            }
+
+            else{
+                Toast.makeText(this, "AddressList is null", Toast.LENGTH_SHORT).show()
+            }
+        }
+        
         if (address_recycler.adapter?.itemCount == 0) {
             changeFab()
         }
-        address_recycler.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         super.onSaveInstanceState(outState, outPersistentState)
-        outState.putParcelableArrayList("addressList", listOfAddress)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        val addressList= savedInstanceState.getParcelableArrayList<Address>("addressList")?.toMutableList()
-        if(addressList != null) {
-            address_recycler.adapter = AddressAdapter(addressList, this)
-        }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Toast.makeText(this, "Landscape Mode",Toast.LENGTH_SHORT).show()
-        } else if (newConfig.orientation ==
-            Configuration.ORIENTATION_PORTRAIT){
-            Toast.makeText(this, "Potrait mode", Toast.LENGTH_SHORT).show()
-
-            // Change other things
-        }
+        outState.putParcelableArrayList(ADDRESS_LIST, listOfAddress)
     }
     /*
     function to Load all the available addresses by calling a GET by getAddressList() of AddressService and assigning the list of
     all the available addresses to the addressRecyclerView
      */
-    private fun loadAddress(){
+    private fun loadAddress() {
+        Toast.makeText(this, "loadAddress() called", Toast.LENGTH_SHORT).show()
         val addressService = ServiceBuilder.buildService(AddressService::class.java)
         val requestCall = addressService.getAddressList()
-
         requestCall.enqueue(object : Callback<MutableList<Address>>{
             override fun onFailure(call: Call<MutableList<Address>>, t: Throwable) {
                 Toast.makeText(this@Addresses, "Failed to load addresses", Toast.LENGTH_SHORT).show()
@@ -88,7 +86,8 @@ class Addresses : AppCompatActivity() {
                 if(response.isSuccessful){
                     progress_circular_address.isVisible = false
                     val addressList = response.body() as MutableList<Address>
-                    //listOfAddress = addressList as ArrayList<Address>
+
+                    listOfAddress = addressList as ArrayList<Address>
                     address_recycler.adapter = AddressAdapter(addressList, baseContext)
                     if(address_recycler.adapter?.itemCount == 0){
                         changeFab()
