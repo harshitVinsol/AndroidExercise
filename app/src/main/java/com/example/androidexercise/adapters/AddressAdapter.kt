@@ -47,8 +47,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
         /*
         To check if the Address is Default Address and set default tick visible if true
          */
-        val id = DEFAULT_ID?.toInt()
-        if(address.id == id){
+        if(address.id == DEFAULT_ID){
             holder.defaultAddress.isInvisible = false
         }
         /*
