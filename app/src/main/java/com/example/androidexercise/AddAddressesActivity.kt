@@ -9,8 +9,8 @@ import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-import com.example.androidexercise.Addresses.Companion.DEFAULT_ID
-import com.example.androidexercise.Addresses.Companion.INTENT_KEY
+import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
+import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
@@ -21,7 +21,7 @@ import retrofit2.Response
 /*
 An activity to Add and Update the Addresses
  */
-class AddAddresses : AppCompatActivity() {
+class AddAddressesActivity : AppCompatActivity() {
     companion object{
         const val DEFAULT_SHARED_PREF= "DefaultKeySharedPref"
         const val DEFAULT_KEY= "DefaultKey"
@@ -123,7 +123,7 @@ class AddAddresses : AppCompatActivity() {
                                 DEFAULT_ID = 0
                             }
                         }
-                        val intent = Intent(this@AddAddresses, Addresses::class.java)
+                        val intent = Intent(this@AddAddressesActivity, AddressesActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()
@@ -191,7 +191,7 @@ class AddAddresses : AppCompatActivity() {
                                 editor.apply()
                             }
                         }
-                        val intent = Intent(this@AddAddresses, Addresses::class.java)
+                        val intent = Intent(this@AddAddressesActivity, AddressesActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
                         finish()

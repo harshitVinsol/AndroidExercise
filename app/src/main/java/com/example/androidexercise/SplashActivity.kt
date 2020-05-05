@@ -7,14 +7,14 @@ import android.os.Handler
 /*
 Main Activity just for a splash screen for duration of 3 seconds
  */
-class MainActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         Handler().postDelayed({
-            val intent = Intent(this, Addresses::class.java)
+            val intent = Intent(this, AddressesActivity::class.java)
             startActivity(intent)
             finish()
         }, 3000)

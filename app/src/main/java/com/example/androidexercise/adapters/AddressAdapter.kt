@@ -13,7 +13,8 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexercise.*
-import com.example.androidexercise.Addresses.Companion.INTENT_KEY
+import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
+import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
@@ -48,7 +49,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
         /*
         To check if the Address is Default Address and set default tick visible if true
          */
-        if(address.id == Addresses.DEFAULT_ID){
+        if(address.id == DEFAULT_ID){
             holder.defaultAddress.isInvisible = false
         }
         /*
@@ -68,8 +69,8 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
                     }
 
                     R.id.setting_delete ->{
-                        if(address.id == Addresses.DEFAULT_ID){
-                            Addresses.DEFAULT_ID = 0
+                        if(address.id == DEFAULT_ID){
+                            DEFAULT_ID = 0
                             holder.defaultAddress.isInvisible = true
                         }
                         deleteAddress(address.id, holder.adapterPosition)
@@ -97,14 +98,14 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 if(response.isSuccessful){
                     Toast.makeText(mContext, "Address Deleted Successfully", Toast.LENGTH_SHORT).show()
-                    if(id == Addresses.DEFAULT_ID) {
-                        Addresses.DEFAULT_ID = 0
+                    if(id == DEFAULT_ID) {
+                        DEFAULT_ID = 0
                     }
                     addressList.removeAt(position)
                     notifyDataSetChanged()
 
                     if(addressList.size == 0){
-                        val intent = Intent(mContext, Addresses::class.java)
+                        val intent = Intent(mContext, AddressesActivity::class.java)
                         intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(mContext, intent, null)
                     }
@@ -127,7 +128,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
             "state" to address.state_name,
             "pincode" to address.zipcode
         )
-        val intent = Intent(mContext, AddAddresses::class.java)
+        val intent = Intent(mContext, AddAddressesActivity::class.java)
         intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra(INTENT_KEY, "update")
         intent.putExtra("id", id)
@@ -137,7 +138,7 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
 }
 
 class ViewHolder( itemView : View) : RecyclerView.ViewHolder(itemView){
-    val textAddress = itemView.findViewById<TextView>(R.id.address)
+    val textAddress = itemView.findViewById<TextView>(R.id.text_address)
     val defaultAddress = itemView.findViewById<ImageView>(R.id.default_tick)
     val settingsButton = itemView.findViewById<ImageButton>(R.id.settings_button)
 }

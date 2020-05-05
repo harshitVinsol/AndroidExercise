@@ -11,12 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:fullBackupContent="true">
-        <activity android:name=".AddAddresses"
-            android:parentActivityName=".Addresses"
+        <activity android:name=".AddAddressesActivity"
+            android:parentActivityName=".AddressesActivity"
             android:label="Add Address"/>
-        <activity android:name=".Addresses"
+        <activity android:name=".AddressesActivity"
             android:label="Addresses"/>
-        <activity android:name=".MainActivity"
+        <activity android:name=".SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
