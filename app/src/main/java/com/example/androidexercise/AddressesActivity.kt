@@ -14,6 +14,7 @@ import com.example.androidexercise.AddAddressesActivity.Companion.ADDED_ADDRESS
 import com.example.androidexercise.AddAddressesActivity.Companion.ADDED_CODE
 import com.example.androidexercise.AddAddressesActivity.Companion.DEFAULT_KEY
 import com.example.androidexercise.AddAddressesActivity.Companion.DEFAULT_SHARED_PREF
+import com.example.androidexercise.AddAddressesActivity.Companion.UPDATED_CODE
 import com.example.androidexercise.adapters.AddressAdapter
 import com.example.androidexercise.adapters.ViewHolder
 import com.example.androidexercise.models.Address
@@ -53,7 +54,7 @@ class AddressesActivity : AppCompatActivity() {
             address_recycler.adapter = adapter
             showFab()
         }
-        showFab()
+        //showFab()
     }
 
     private fun showFab() {
@@ -143,12 +144,12 @@ class AddressesActivity : AppCompatActivity() {
      */
     private fun updateAddress(id: Int, address: Address, position: Int) {
         val intent = Intent(this, AddAddressesActivity::class.java)
-        intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        //intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra(ADDRESS_KEY, address)
         intent.putExtra(INTENT_KEY, false)
         intent.putExtra(ADDRESS_ID, id)
-        intent.putExtra("position", position)
-        startActivity(intent)
+        intent.putExtra(ADDRESS_POSITION, position)
+        startActivityForResult(intent, REQUEST_CODE)
     }
 
     /*
@@ -238,11 +239,11 @@ class AddressesActivity : AppCompatActivity() {
             listOfAddress.add(addedAddress!!)
             adapter.setList(listOfAddress)
             address_recycler.adapter = adapter
-        } else {
+            showFab()
+        } else if (requestCode == REQUEST_CODE && resultCode == UPDATED_CODE) {
             val addedAddress = data!!.getParcelableExtra<Address>(ADDED_ADDRESS)
             val position = data.getIntExtra(ADDRESS_POSITION, 0)
-            listOfAddress.removeAt(position)
-            listOfAddress.add(position, addedAddress!!)
+            listOfAddress[position] = addedAddress!!
             adapter.setList(listOfAddress)
             address_recycler.adapter = adapter
         }

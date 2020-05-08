@@ -19,7 +19,6 @@ import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
 import kotlinx.android.synthetic.main.activity_add_addresses.*
-import kotlinx.android.synthetic.main.activity_addresses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
