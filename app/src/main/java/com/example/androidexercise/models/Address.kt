@@ -2,6 +2,7 @@ package com.example.androidexercise.models
 
 import android.os.Parcel
 import android.os.Parcelable
+
 /*
 Model data class Address to give a format to the address
  */

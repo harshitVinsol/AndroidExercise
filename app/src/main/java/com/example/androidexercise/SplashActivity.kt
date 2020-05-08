@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+
 /*
 Main Activity just for a splash screen for duration of 3 seconds
  */

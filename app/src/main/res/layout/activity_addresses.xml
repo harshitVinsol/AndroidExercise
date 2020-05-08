@@ -5,23 +5,17 @@
     android:id="@+id/addresses_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddressesActivity"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".AddressesActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/address_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:layout_marginBottom="16dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/address_foa_centre"
@@ -41,16 +35,18 @@
         android:id="@+id/address_foa_bottom"
         android:layout_width="55dp"
         android:layout_height="55dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:clickable="true"
         android:onClick="onFabClick"
         android:visibility="invisible"
         app:backgroundTint="@color/button_next"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.95"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/ic_add_white_24dp" />
 
     <TextView
@@ -81,16 +77,12 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/address_foa_centre"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <ProgressBar
+    <include
         android:id="@+id/progress_circular_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        layout="@layout/view_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

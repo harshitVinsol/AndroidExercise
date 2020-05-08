@@ -12,15 +12,20 @@ import android.widget.*
 import androidx.core.view.isVisible
 import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_ID
 import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_KEY
+import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_POSITION
 import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
 import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
+import com.example.androidexercise.AddressesActivity.Companion.adapter
+import com.example.androidexercise.AddressesActivity.Companion.listOfAddress
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
 import kotlinx.android.synthetic.main.activity_add_addresses.*
+import kotlinx.android.synthetic.main.activity_addresses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+
 /*
 An activity to Add and Update the Addresses
  */
@@ -30,11 +35,11 @@ class AddAddressesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_addresses)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        showAddButton()
         val isAdd = intent.getBooleanExtra(INTENT_KEY, true)
-        val id = intent.getIntExtra(ADDRESS_ID,0)
-        if(!isAdd){
-            if(id == DEFAULT_ID) {
+        val id = intent.getIntExtra(ADDRESS_ID, 0)
+        if (!isAdd) {
+            if (id == DEFAULT_ID) {
                 check_default.isChecked = true
             }
             setUpdateFields()
@@ -45,11 +50,11 @@ class AddAddressesActivity : AppCompatActivity() {
         button_add.setOnClickListener {
             validateAll()
 
-            if(isAdd){
+            if (isAdd) {
                 addAddress()
-            }
-            else{
-                updateAddress(id)
+            } else {
+                val position = intent.getIntExtra(ADDRESS_POSITION, 0)
+                updateAddress(id, position)
             }
         }
         validateOnChange()
@@ -57,17 +62,18 @@ class AddAddressesActivity : AppCompatActivity() {
         Enabling Enter/DONE to submit form on pincode EditText
          */
         pincode.setOnEditorActionListener { _, actionId, event ->
-            if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)){
+            if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
                 button_add.performClick()
             }
             false
         }
     }
+
     /*
     function to Update the address by id and calling a PUT request using updateAddressById() of AddressService
      */
-    private fun updateAddress(id: Int ){
-        if(validateInput()){
+    private fun updateAddress(id: Int, position: Int) {
+        if (validateInput()) {
             showProgressBar()
             val mAddress = Address(
                 id,
@@ -97,12 +103,17 @@ class AddAddressesActivity : AppCompatActivity() {
 
             requestCall.enqueue(object : Callback<Address> {
                 override fun onFailure(call: Call<Address>, t: Throwable) {
-                    Toast.makeText(baseContext, "Failed to Update the Address", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Failed to Update the Address", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
                 override fun onResponse(call: Call<Address>, response: Response<Address>) {
                     if (response.isSuccessful) {
-                        Toast.makeText(baseContext, "Address updated Successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@AddAddressesActivity,
+                            "Address updated Successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                         val newAddress: Address? = response.body()
                         val defaultSharedPref =
@@ -114,27 +125,30 @@ class AddAddressesActivity : AppCompatActivity() {
                                 editor.putInt(DEFAULT_KEY, defaultValue)
                                 editor.apply()
                             }
+                        } else if (DEFAULT_ID == newAddress?.id) {
+                            editor.putInt(DEFAULT_KEY, 0)
+                            editor.apply()
+                            DEFAULT_ID = 0
                         }
-                        else if(DEFAULT_ID == newAddress?.id){
-                                editor.putInt(DEFAULT_KEY, 0)
-                                editor.apply()
-                                DEFAULT_ID = 0
-                        }
-                        val intent = Intent(this@AddAddressesActivity, AddressesActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intent)
+                        val intent = Intent()
+                        intent.putExtra(ADDED_ADDRESS, newAddress)
+                        intent.putExtra(ADDRESS_POSITION, position)
+                        setResult(UPDATED_CODE, intent)
                         finish()
-                    }
-                    else {
-                        Toast.makeText(baseContext, "Failed to update the Address : " + response.code().toString(), Toast.LENGTH_SHORT ).show()
+                    } else {
+                        Toast.makeText(
+                            this@AddAddressesActivity,
+                            "Failed to update the Address : " + response.code().toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             })
-        }
-        else{
+        } else {
             showAddButton()
         }
     }
+
     /*
     function to Add the address and calling a POST request using addAddress() of AddressService
      */
@@ -170,16 +184,25 @@ class AddAddressesActivity : AppCompatActivity() {
 
             requestCall.enqueue(object : Callback<Address> {
                 override fun onFailure(call: Call<Address>, t: Throwable) {
-                    Toast.makeText(baseContext, "Failed to add the Address", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@AddAddressesActivity,
+                        "Failed to add the Address",
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
 
                 override fun onResponse(call: Call<Address>, response: Response<Address>) {
                     if (response.isSuccessful) {
-                        Toast.makeText(baseContext, "Address added Successfully", Toast.LENGTH_SHORT)
+                        val newAddress: Address? = response.body()
+                        Toast.makeText(
+                            this@AddAddressesActivity,
+                            "Address added Successfully",
+                            Toast.LENGTH_SHORT
+                        )
                             .show()
 
                         if (check_default.isChecked) {
-                            val newAddress: Address? = response.body()
                             val defaultValue = newAddress?.id
                             val defaultSharedPref =
                                 getSharedPreferences(DEFAULT_SHARED_PREF, Context.MODE_PRIVATE)
@@ -189,150 +212,158 @@ class AddAddressesActivity : AppCompatActivity() {
                                 editor.apply()
                             }
                         }
-                        val intent = Intent(this@AddAddressesActivity, AddressesActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intent)
+                        val intent = Intent()
+                        intent.putExtra(ADDED_ADDRESS, newAddress)
+                        setResult(ADDED_CODE, intent)
                         finish()
-                    }
-                    else {
-                        Toast.makeText(baseContext, "Failed to add the Address : " + response.code().toString(), Toast.LENGTH_SHORT ).show()
+                    } else {
+                        Toast.makeText(
+                            this@AddAddressesActivity,
+                            "Failed to add the Address : " + response.code().toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             })
-        }
-        else{
+        } else {
             showAddButton()
         }
     }
+
     /*
     A Boolean function to validate the EditText of AddAddress Layout
      */
-    private fun validateInput() = (validateName() && validateAddress1() && validateAddress2() && validateCity() && validateState() && validatePincode())
+    private fun validateInput() =
+        (validateName() && validateAddress1() && validateAddress2() && validateCity() && validateState() && validatePincode())
+
     /*
     A Boolean function to validate the name field
      */
-    private fun validateName() : Boolean{
-        if(name.text.toString().isBlank()){
+    private fun validateName(): Boolean {
+        if (name.text.toString().isBlank()) {
             name_input_layout.error = "Enter a proper name"
             name.requestFocus()
             return false
-        }
-        else{
+        } else {
             name_input_layout.error = null
             return true
         }
     }
+
     /*
     A Boolean function to validate the Address Line 1 field
      */
-    private fun validateAddress1() : Boolean{
-        if(add1.text.toString().isBlank()){
+    private fun validateAddress1(): Boolean {
+        if (add1.text.toString().isBlank()) {
             add1_input_layout.error = "Enter a proper Address"
             add1.requestFocus()
             return false
-        }
-        else{
+        } else {
             add1_input_layout.error = null
             return true
         }
     }
+
     /*
     A Boolean function to validate the Address Line 2 field
      */
-    private fun validateAddress2() : Boolean{
-        if(add1.text.toString().isBlank()){
+    private fun validateAddress2(): Boolean {
+        if (add1.text.toString().isBlank()) {
             add2_input_layout.error = "Enter a proper Address"
             add2.requestFocus()
             return false
-        }
-        else{
+        } else {
             add2_input_layout.error = null
             return true
         }
     }
+
     /*
     A Boolean function to validate the City field
      */
-    private fun validateCity() : Boolean{
-        if(city.text.toString().isBlank()){
+    private fun validateCity(): Boolean {
+        if (city.text.toString().isBlank()) {
             city_input_layout.error = "Enter a proper City"
             city.requestFocus()
             return false
-        }
-        else{
+        } else {
             city_input_layout.error = null
             return true
         }
     }
+
     /*
     A Boolean function to validate the State field
      */
-    private fun validateState() : Boolean{
-        if(state.text.toString().isBlank()){
+    private fun validateState(): Boolean {
+        if (state.text.toString().isBlank()) {
             state_input_layout.error = "Enter a proper State"
             state.requestFocus()
             return false
-        }
-        else{
+        } else {
             state_input_layout.error = null
             return true
         }
     }
+
     /*
     A Boolean function to validate the Pincode field
      */
-    private fun validatePincode() : Boolean{
-        if(pincode.text.toString().length != 6){
+    private fun validatePincode(): Boolean {
+        if (pincode.text.toString().length != 6) {
             pincode_input_layout.error = "Enter a proper Pincode of six digits"
             pincode.requestFocus()
             return false
-        }
-        else{
+        } else {
             pincode_input_layout.error = null
             return true
         }
     }
+
     /*
     A function to set all the fields while updating an address
      */
-    private fun setUpdateFields(){
+    private fun setUpdateFields() {
         val address = intent.getParcelableExtra<Address>(ADDRESS_KEY)
         name.setText(address?.firstname)
         add1.setText(address?.address1)
 
-        if(address?.address2 == null){
+        if (address?.address2 == null) {
             add2.setText(R.string.add_line_2)
-        }
-        else {
+        } else {
             add2.setText(address.address2)
         }
 
         landmark.setText(R.string.landmark)
         city.setText(address?.city)
 
-        if(address?.state_name == null){
+        if (address?.state_name == null) {
             state.setText(R.string.state)
-        }
-        else {
+        } else {
             state.setText(address.state_name)
         }
 
         pincode.setText(address?.zipcode)
     }
+
     /*
     An extension function of EditText that takes a lambda function
      */
     private fun EditText.onChange(cb: (String) -> Unit) {
-        this.addTextChangedListener(object: TextWatcher {
-            override fun afterTextChanged(s: Editable?) { cb(s.toString()) }
+        this.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                cb(s.toString())
+            }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+
     /*
     A function to validate the fields onChange()
      */
-    private fun validateOnChange(){
+    private fun validateOnChange() {
         name.onChange {
             validateName()
         }
@@ -352,10 +383,11 @@ class AddAddressesActivity : AppCompatActivity() {
             validatePincode()
         }
     }
+
     /*
     A function to validate all fields
      */
-    private fun validateAll(){
+    private fun validateAll() {
         validateName()
         validateAddress1()
         validateAddress2()
@@ -363,22 +395,28 @@ class AddAddressesActivity : AppCompatActivity() {
         validateState()
         validatePincode()
     }
+
     /*
     A function to show Progress bar and remove add Button
      */
-    private fun showProgressBar(){
+    private fun showProgressBar() {
         button_add.isVisible = false
         progress_bar_add_address.isVisible = true
     }
+
     /*
     A function to show add Button and remove Progress bar
      */
-    private fun showAddButton(){
+    private fun showAddButton() {
         button_add.isVisible = true
         progress_bar_add_address.isVisible = false
     }
-    companion object{
-        const val DEFAULT_SHARED_PREF= "DefaultKeySharedPref"
-        const val DEFAULT_KEY= "DefaultKey"
+
+    companion object {
+        const val DEFAULT_SHARED_PREF = "DefaultKeySharedPref"
+        const val DEFAULT_KEY = "DefaultKey"
+        const val ADDED_ADDRESS = "addedAddress"
+        const val ADDED_CODE = 101
+        const val UPDATED_CODE = 102
     }
 }
