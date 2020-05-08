@@ -1,29 +1,14 @@
 package com.example.androidexercise.adapters
 
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.content.ContextCompat.startActivity
-import androidx.core.os.bundleOf
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexercise.*
 import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
-import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
-import com.example.androidexercise.callbacks.AddressCallback
 import com.example.androidexercise.models.Address
-import com.example.androidexercise.services.AddressService
-import com.example.androidexercise.services.ServiceBuilder
-import kotlinx.android.synthetic.main.item_address.view.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 /*
 Class AddressAdapter to be used in RecyclerView for showing addresses having list of Address and context of Activity called from
