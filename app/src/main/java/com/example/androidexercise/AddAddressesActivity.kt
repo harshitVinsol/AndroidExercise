@@ -11,7 +11,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.core.view.isVisible
 import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_ID
-import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_POSITION
+import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_KEY
 import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
 import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
 import com.example.androidexercise.models.Address
@@ -33,7 +33,6 @@ class AddAddressesActivity : AppCompatActivity() {
 
         val isAdd = intent.getBooleanExtra(INTENT_KEY, true)
         val id = intent.getIntExtra(ADDRESS_ID,0)
-        val position = intent.getIntExtra(ADDRESS_POSITION , 0)
         if(!isAdd){
             if(id == DEFAULT_ID) {
                 check_default.isChecked = true
@@ -50,7 +49,7 @@ class AddAddressesActivity : AppCompatActivity() {
                 addAddress()
             }
             else{
-                updateAddress(id, position)
+                updateAddress(id)
             }
         }
         validateOnChange()
@@ -67,7 +66,7 @@ class AddAddressesActivity : AppCompatActivity() {
     /*
     function to Update the address by id and calling a PUT request using updateAddressById() of AddressService
      */
-    private fun updateAddress(id: Int , position : Int){
+    private fun updateAddress(id: Int ){
         if(validateInput()){
             showProgressBar()
             val mAddress = Address(
@@ -297,7 +296,7 @@ class AddAddressesActivity : AppCompatActivity() {
     A function to set all the fields while updating an address
      */
     private fun setUpdateFields(){
-        val address = intent.getParcelableExtra<Address>("address")
+        val address = intent.getParcelableExtra<Address>(ADDRESS_KEY)
         name.setText(address?.firstname)
         add1.setText(address?.address1)
 

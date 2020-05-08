@@ -127,10 +127,9 @@ class AddressesActivity : AppCompatActivity() {
     private fun updateAddress(id : Int, address : Address , position: Int){
         val intent = Intent(this, AddAddressesActivity::class.java)
         intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.putExtra("address", address)
+        intent.putExtra(ADDRESS_KEY, address)
         intent.putExtra(INTENT_KEY, false)
         intent.putExtra(ADDRESS_ID, id)
-        intent.putExtra(ADDRESS_POSITION, position)
         startActivity(intent)
     }
     /*
@@ -212,6 +211,6 @@ class AddressesActivity : AppCompatActivity() {
         var DEFAULT_ID = 0
         private var listLoaded : Boolean = false
         const val ADDRESS_ID = "id"
-        const val ADDRESS_POSITION = "position"
+        const val ADDRESS_KEY = "address"
     }
 }

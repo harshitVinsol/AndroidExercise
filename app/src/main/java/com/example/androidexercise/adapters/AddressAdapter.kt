@@ -21,6 +21,9 @@ class AddressAdapter(var addressList: MutableList<Address> , private val callbac
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_address, parent, false)
         return ViewHolder(v)
     }
+    /*
+    A function to set the list as a parameter to addressList and call notifyDataSetChanged()
+     */
     fun setList(list : MutableList<Address>){
         addressList = list
         notifyDataSetChanged()
