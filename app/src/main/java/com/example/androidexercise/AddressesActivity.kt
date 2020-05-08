@@ -29,8 +29,8 @@ An Activity to show all the Addresses available using a recycler view and Adding
 */
 class AddressesActivity : AppCompatActivity() {
     private lateinit var listOfAddress : MutableList<Address>
-    private lateinit var adapter : AddressAdapter
     companion object{
+        private lateinit var adapter : AddressAdapter
         const val INTENT_KEY = "isAdd"
         private const val ADDRESS_LIST = "addressList"
         //DEFAULT_ID is set to 0 if there is no address saved as a default address
@@ -52,13 +52,9 @@ class AddressesActivity : AppCompatActivity() {
             loadAddress()
         }
         else{
-            listOfAddress = savedInstanceState.getParcelableArrayList<Address>(ADDRESS_LIST) as ArrayList<Address>
-            /*adapter= AddressAdapter(listOfAddress){
-                    address :Address , position : Int , holder : ViewHolder->
-                createSettingsPopupMenu(address , position, holder)
-            }
+            listOfAddress = savedInstanceState.getParcelableArrayList<Address>(ADDRESS_LIST) as MutableList<Address>
+            adapter.setList(listOfAddress)
             address_recycler.adapter = adapter
-             */
             address_recycler.adapter?.notifyDataSetChanged()
             progress_circular_address.isVisible = false
         }

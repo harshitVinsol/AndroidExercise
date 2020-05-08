@@ -32,7 +32,7 @@ class AddressAdapter(var addressList: MutableList<Address> , private val callbac
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_address, parent, false)
         return ViewHolder(v)
     }
-    public fun setList(list : MutableList<Address>){
+    fun setList(list : MutableList<Address>){
         addressList = list
     }
     /*

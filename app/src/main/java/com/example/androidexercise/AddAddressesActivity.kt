@@ -25,6 +25,7 @@ import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
 import kotlinx.android.synthetic.main.activity_add_addresses.*
+import kotlinx.android.synthetic.main.activity_addresses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -67,7 +68,7 @@ class AddAddressesActivity : AppCompatActivity() {
         /*
         Enabling Enter/DONE to submit form on pincode EditText
          */
-        pincode.setOnEditorActionListener { v, actionId, event ->
+        pincode.setOnEditorActionListener { _, actionId, event ->
             if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)){
                 button_add.performClick()
             }
@@ -126,14 +127,11 @@ class AddAddressesActivity : AppCompatActivity() {
                                 editor.apply()
                             }
                         }
-                        else{
-                            if(DEFAULT_ID == newAddress?.id) {
+                        else if(DEFAULT_ID == newAddress?.id){
                                 editor.putInt(DEFAULT_KEY, 0)
                                 editor.apply()
                                 DEFAULT_ID = 0
-                            }
                         }
-                        //address_recycler.adapter?.notifyDataSetChanged()
                         val intent = Intent(this@AddAddressesActivity, AddressesActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
@@ -203,7 +201,6 @@ class AddAddressesActivity : AppCompatActivity() {
                                 editor.apply()
                             }
                         }
-                        //address_recycler.adapter?.notifyDataSetChanged()
                         val intent = Intent(this@AddAddressesActivity, AddressesActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intent)
