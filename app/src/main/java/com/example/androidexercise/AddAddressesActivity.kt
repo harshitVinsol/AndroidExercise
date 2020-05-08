@@ -15,8 +15,6 @@ import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_KEY
 import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_POSITION
 import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
 import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
-import com.example.androidexercise.AddressesActivity.Companion.adapter
-import com.example.androidexercise.AddressesActivity.Companion.listOfAddress
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder

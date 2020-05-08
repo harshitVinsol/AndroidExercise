@@ -29,7 +29,8 @@ import retrofit2.Response
 An Activity to show all the Addresses available using a recycler view and Adding an Address using a floating action button
 */
 class AddressesActivity : AppCompatActivity() {
-
+    private var listOfAddress = mutableListOf<Address>()
+    private lateinit var adapter: AddressAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addresses)
@@ -248,14 +249,11 @@ class AddressesActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val REQUEST_CODE = 100
-        lateinit var adapter: AddressAdapter
-        const val INTENT_KEY = "isAdd"
-        private const val ADDRESS_LIST = "addressList"
-        internal var listOfAddress = mutableListOf<Address>()
-
         //DEFAULT_ID is set to 0 if there is no address saved as a default address
         var DEFAULT_ID = 0
+        const val REQUEST_CODE = 100
+        const val INTENT_KEY = "isAdd"
+        private const val ADDRESS_LIST = "addressList"
         private var listLoaded: Boolean = false
         const val ADDRESS_ID = "id"
         const val ADDRESS_KEY = "address"
