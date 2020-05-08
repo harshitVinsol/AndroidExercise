@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddAddresses"
+    tools:context=".AddAddressesActivity"
     android:orientation="vertical">
 
     <ScrollView
@@ -166,19 +166,42 @@
                 android:layout_marginBottom="20dp"
                 android:fontFamily="@font/muli_regular"
                 android:textColor="@color/grey"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <ImageButton
-                android:layout_width="125dp"
-                android:layout_height="37.5dp"
-                android:id="@+id/button_add"
-                android:src="@drawable/ic_arrow_forward_white_24dp"
-                android:background="@color/button_next"
-                android:layout_gravity="right"
-                android:layout_marginRight="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp"
-                android:fontFamily="@font/muli_regular"
-                android:textColor="@color/grey"/>
+                <ImageButton
+                    android:id="@+id/button_add"
+                    android:layout_width="125dp"
+                    android:layout_height="37.5dp"
+                    android:layout_gravity="right"
+                    android:layout_marginEnd="40dp"
+                    android:background="@color/button_next"
+                    android:fontFamily="@font/muli_regular"
+                    android:src="@drawable/ic_arrow_forward_white_24dp"
+                    android:textColor="@color/grey"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.545" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_add_address"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="70dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    android:visibility="invisible"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

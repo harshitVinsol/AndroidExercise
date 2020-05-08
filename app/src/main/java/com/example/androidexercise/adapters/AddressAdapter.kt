@@ -11,13 +11,16 @@ import android.widget.*
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androidexercise.*
 import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
 import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
+import com.example.androidexercise.callbacks.AddressCallback
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
+import kotlinx.android.synthetic.main.item_address.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,13 +28,27 @@ import retrofit2.Response
 /*
 Class AddressAdapter to be used in RecyclerView for showing addresses having list of Address and context of Activity called from
  */
-class AddressAdapter(val addressList: MutableList<Address> , val mContext: Context) : RecyclerView.Adapter<ViewHolder>(){
+class AddressAdapter(var addressList: MutableList<Address> , private val callback : (Address, Int, ViewHolder) -> Unit) : RecyclerView.Adapter<ViewHolder>(){
+    companion object{
+        const val ADDRESS_BUNDLE = "addressBundle"
+        const val ADDRESS_ID = "id"
+        const val ADDRESS_POSITION = "positon"
+        const val NAME = "name"
+        const val ADD1 = "add1"
+        const val ADD2 = "add2"
+        const val CITY = "city"
+        const val STATE = "state"
+        const val PINCODE = "pincode"
+    }
     /*
     function to attach a layout to the ViewHolder
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_address, parent, false)
         return ViewHolder(v)
+    }
+    public fun setList(list : MutableList<Address>){
+        addressList = list
     }
     /*
     function to return size of addressList
@@ -50,90 +67,11 @@ class AddressAdapter(val addressList: MutableList<Address> , val mContext: Conte
         To check if the Address is Default Address and set default tick visible if true
          */
         if(address.id == DEFAULT_ID){
-            holder.defaultAddress.isInvisible = false
+            holder.defaultAddress.isVisible = true
         }
-        /*
-        Creating a Pop up menu to Update or Delete the Address
-         */
         holder.settingsButton.setOnClickListener{
-            val popUpMenu = PopupMenu(mContext, holder.settingsButton)
-            val inflater: MenuInflater = popUpMenu.menuInflater
-            inflater.inflate(R.menu.setting_menu, popUpMenu.menu)
-            popUpMenu.show()
-
-            popUpMenu.setOnMenuItemClickListener {
-                when(it.itemId){
-                    R.id.setting_update -> {
-                        updateAddress(address.id, address)
-                        true
-                    }
-
-                    R.id.setting_delete ->{
-                        if(address.id == DEFAULT_ID){
-                            DEFAULT_ID = 0
-                            holder.defaultAddress.isInvisible = true
-                        }
-                        deleteAddress(address.id, holder.adapterPosition)
-                        true
-                    }
-                    
-                    else -> false
-                }
-            }
+            callback.invoke(address , position , holder)
         }
-    }
-
-    /*
-    function to Delete the address from pop up Menu by calling deleteAddress(id) from AddressService
-     */
-    private fun deleteAddress(id: Int, position: Int){
-        val addressService = ServiceBuilder.buildService(AddressService::class.java)
-        val requestCall = addressService.deleteAddress(id)
-
-        requestCall.enqueue(object : Callback<Unit>{
-            override fun onFailure(call: Call<Unit>, t: Throwable) {
-                Toast.makeText(mContext, "Failed to Delete Address", Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
-                if(response.isSuccessful){
-                    Toast.makeText(mContext, "Address Deleted Successfully", Toast.LENGTH_SHORT).show()
-                    if(id == DEFAULT_ID) {
-                        DEFAULT_ID = 0
-                    }
-                    addressList.removeAt(position)
-                    notifyDataSetChanged()
-
-                    if(addressList.size == 0){
-                        val intent = Intent(mContext, AddressesActivity::class.java)
-                        intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(mContext, intent, null)
-                    }
-                }
-                else{
-                    Toast.makeText(mContext, "Failed to Delete Address : "+ response.code().toString(), Toast.LENGTH_SHORT).show()
-                }
-            }
-        })
-    }
-    /*
-    function to Update the address from pop up menu sending an intent to AddAddress activity to input the updated fields
-     */
-    private fun updateAddress(id: Int, address: Address){
-        val add: Bundle = bundleOf(
-            "name" to address.firstname,
-            "add1" to address.address1,
-            "add2" to address.address2,
-            "city" to address.city,
-            "state" to address.state_name,
-            "pincode" to address.zipcode
-        )
-        val intent = Intent(mContext, AddAddressesActivity::class.java)
-        intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent.putExtra(INTENT_KEY, "update")
-        intent.putExtra("id", id)
-        intent.putExtra("address", add)
-        startActivity(mContext, intent, null)
     }
 }
 
