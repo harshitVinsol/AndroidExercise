@@ -14,7 +14,7 @@ data class Address(
     val address2: String,
     val city: String,
     val zipcode: String,
-    val state_name: String,
+    val state_name: String?,
     val alternate_phone: String?,
     val company: String?,
     val state_id: Int?,

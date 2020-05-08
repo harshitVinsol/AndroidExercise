@@ -14,17 +14,6 @@ import com.example.androidexercise.models.Address
 Class AddressAdapter to be used in RecyclerView for showing addresses having list of Address and context of Activity called from
  */
 class AddressAdapter(var addressList: MutableList<Address> , private val callback : (Address, Int, ViewHolder) -> Unit) : RecyclerView.Adapter<ViewHolder>(){
-    companion object{
-        const val ADDRESS_BUNDLE = "addressBundle"
-        const val ADDRESS_ID = "id"
-        const val ADDRESS_POSITION = "positon"
-        const val NAME = "name"
-        const val ADD1 = "add1"
-        const val ADD2 = "add2"
-        const val CITY = "city"
-        const val STATE = "state"
-        const val PINCODE = "pincode"
-    }
     /*
     function to attach a layout to the ViewHolder
      */
@@ -34,6 +23,7 @@ class AddressAdapter(var addressList: MutableList<Address> , private val callbac
     }
     fun setList(list : MutableList<Address>){
         addressList = list
+        notifyDataSetChanged()
     }
     /*
     function to return size of addressList

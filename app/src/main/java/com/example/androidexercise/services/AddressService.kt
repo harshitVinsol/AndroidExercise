@@ -23,7 +23,7 @@ interface AddressService{
         @Field("address[address2]") add2: String,
         @Field("address[city]") city: String,
         @Field("address[country_id]") country: Int?,
-        @Field("address[state_name]") stateName: String,
+        @Field("address[state_name]") stateName: String?,
         @Field("address[state_id]") stateId: Int?,
         @Field("address[zipcode]") pincode: String?,
         @Field("address[phone]") phone: String?

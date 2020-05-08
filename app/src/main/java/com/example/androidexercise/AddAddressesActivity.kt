@@ -10,22 +10,14 @@ import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.core.view.isVisible
+import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_ID
+import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_POSITION
 import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
 import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
-import com.example.androidexercise.adapters.AddressAdapter.Companion.ADD1
-import com.example.androidexercise.adapters.AddressAdapter.Companion.ADD2
-import com.example.androidexercise.adapters.AddressAdapter.Companion.ADDRESS_BUNDLE
-import com.example.androidexercise.adapters.AddressAdapter.Companion.ADDRESS_ID
-import com.example.androidexercise.adapters.AddressAdapter.Companion.ADDRESS_POSITION
-import com.example.androidexercise.adapters.AddressAdapter.Companion.CITY
-import com.example.androidexercise.adapters.AddressAdapter.Companion.NAME
-import com.example.androidexercise.adapters.AddressAdapter.Companion.PINCODE
-import com.example.androidexercise.adapters.AddressAdapter.Companion.STATE
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
 import kotlinx.android.synthetic.main.activity_add_addresses.*
-import kotlinx.android.synthetic.main.activity_addresses.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,10 +25,7 @@ import retrofit2.Response
 An activity to Add and Update the Addresses
  */
 class AddAddressesActivity : AppCompatActivity() {
-    companion object{
-        const val DEFAULT_SHARED_PREF= "DefaultKeySharedPref"
-        const val DEFAULT_KEY= "DefaultKey"
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_addresses)
@@ -160,7 +149,7 @@ class AddAddressesActivity : AppCompatActivity() {
                 add2.text.toString(),
                 city.text.toString(),
                 pincode.text.toString(),
-                state.text.toString(),
+                null,
                 null,
                 null,
                 1400,
@@ -308,28 +297,28 @@ class AddAddressesActivity : AppCompatActivity() {
     A function to set all the fields while updating an address
      */
     private fun setUpdateFields(){
-        val newAddress = intent.getBundleExtra(ADDRESS_BUNDLE)
-        name.setText(newAddress?.get(NAME).toString())
-        add1.setText(newAddress?.get(ADD1).toString())
+        val address = intent.getParcelableExtra<Address>("address")
+        name.setText(address?.firstname)
+        add1.setText(address?.address1)
 
-        if(newAddress?.get(ADD2) == null){
+        if(address?.address2 == null){
             add2.setText(R.string.add_line_2)
         }
         else {
-            add2.setText(newAddress.get(ADD2).toString())
+            add2.setText(address.address2)
         }
 
         landmark.setText(R.string.landmark)
-        city.setText(newAddress?.get(CITY).toString())
+        city.setText(address?.city)
 
-        if(newAddress?.get(STATE) == null){
+        if(address?.state_name == null){
             state.setText(R.string.state)
         }
         else {
-            state.setText(newAddress.get(STATE).toString())
+            state.setText(address.state_name)
         }
 
-        pincode.setText(newAddress?.get(PINCODE).toString())
+        pincode.setText(address?.zipcode)
     }
     /*
     An extension function of EditText that takes a lambda function
@@ -388,5 +377,9 @@ class AddAddressesActivity : AppCompatActivity() {
     private fun showAddButton(){
         button_add.isVisible = true
         progress_bar_add_address.isVisible = false
+    }
+    companion object{
+        const val DEFAULT_SHARED_PREF= "DefaultKeySharedPref"
+        const val DEFAULT_KEY= "DefaultKey"
     }
 }
