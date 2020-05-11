@@ -1,10 +1,11 @@
 package com.example.androidexercise
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -29,11 +30,13 @@ An activity to Add and Update the Addresses
  */
 class AddAddressesActivity : AppCompatActivity() {
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_addresses)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         showAddButton()
         val isAdd = intent.getBooleanExtra(IS_ADD, true)
         val id = intent.getIntExtra(ADDRESS_ID, 0)
@@ -355,13 +358,11 @@ class AddAddressesActivity : AppCompatActivity() {
      */
     private fun EditText.onChange(cb: (String) -> Unit) {
         this.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (start != 0) {
-                    cb(s.toString())
-                }
+            override fun afterTextChanged(s: Editable?) {
+                cb(s.toString())
             }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 
