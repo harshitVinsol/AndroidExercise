@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -14,7 +15,7 @@ import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_ID
 import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_KEY
 import com.example.androidexercise.AddressesActivity.Companion.ADDRESS_POSITION
 import com.example.androidexercise.AddressesActivity.Companion.DEFAULT_ID
-import com.example.androidexercise.AddressesActivity.Companion.INTENT_KEY
+import com.example.androidexercise.AddressesActivity.Companion.IS_ADD
 import com.example.androidexercise.models.Address
 import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
@@ -32,8 +33,9 @@ class AddAddressesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_addresses)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         showAddButton()
-        val isAdd = intent.getBooleanExtra(INTENT_KEY, true)
+        val isAdd = intent.getBooleanExtra(IS_ADD, true)
         val id = intent.getIntExtra(ADDRESS_ID, 0)
         if (!isAdd) {
             if (id == DEFAULT_ID) {
@@ -53,7 +55,6 @@ class AddAddressesActivity : AppCompatActivity() {
                 updateAddress(id, position)
             }
         }
-        validateOnChange()
         /*
         Enabling Enter/DONE to submit form on pincode EditText
          */
@@ -63,6 +64,7 @@ class AddAddressesActivity : AppCompatActivity() {
             }
             false
         }
+        validateOnChange()
     }
 
     /*
@@ -73,12 +75,12 @@ class AddAddressesActivity : AppCompatActivity() {
             showProgressBar()
             val mAddress = Address(
                 id,
-                name.text.toString(),
-                add1.text.toString(),
-                add2.text.toString(),
-                city.text.toString(),
-                pincode.text.toString(),
-                state.text.toString(),
+                name.text.toString().trim(),
+                add1.text.toString().trim(),
+                add2.text.toString().trim(),
+                city.text.toString().trim(),
+                pincode.text.toString().trim(),
+                state.text.toString().trim(),
                 null,
                 null,
                 1400,
@@ -99,7 +101,7 @@ class AddAddressesActivity : AppCompatActivity() {
 
             requestCall.enqueue(object : Callback<Address> {
                 override fun onFailure(call: Call<Address>, t: Throwable) {
-                    Toast.makeText(baseContext, "Failed to Update the Address", Toast.LENGTH_SHORT)
+                    Toast.makeText(baseContext, R.string.update_address_fail, Toast.LENGTH_SHORT)
                         .show()
                 }
 
@@ -107,7 +109,7 @@ class AddAddressesActivity : AppCompatActivity() {
                     if (response.isSuccessful) {
                         Toast.makeText(
                             this@AddAddressesActivity,
-                            "Address updated Successfully",
+                            R.string.update_address_success,
                             Toast.LENGTH_SHORT
                         ).show()
 
@@ -136,7 +138,7 @@ class AddAddressesActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             this@AddAddressesActivity,
-                            "Failed to update the Address : " + response.code().toString(),
+                            R.string.update_address_fail,
                             Toast.LENGTH_SHORT
                         ).show()
                         finish()
@@ -156,11 +158,11 @@ class AddAddressesActivity : AppCompatActivity() {
             showProgressBar()
             val mAddress = Address(
                 300,
-                name.text.toString(),
-                add1.text.toString(),
-                add2.text.toString(),
-                city.text.toString(),
-                pincode.text.toString(),
+                name.text.toString().trim(),
+                add1.text.toString().trim(),
+                add2.text.toString().trim(),
+                city.text.toString().trim(),
+                pincode.text.toString().trim(),
                 null,
                 null,
                 null,
@@ -185,7 +187,7 @@ class AddAddressesActivity : AppCompatActivity() {
                 override fun onFailure(call: Call<Address>, t: Throwable) {
                     Toast.makeText(
                         this@AddAddressesActivity,
-                        "Failed to add the Address",
+                        R.string.add_address_fail,
                         Toast.LENGTH_SHORT
                     )
                         .show()
@@ -196,7 +198,7 @@ class AddAddressesActivity : AppCompatActivity() {
                         val newAddress: Address? = response.body()
                         Toast.makeText(
                             this@AddAddressesActivity,
-                            "Address added Successfully",
+                            R.string.add_address_success,
                             Toast.LENGTH_SHORT
                         )
                             .show()
@@ -220,7 +222,7 @@ class AddAddressesActivity : AppCompatActivity() {
                     } else {
                         Toast.makeText(
                             this@AddAddressesActivity,
-                            "Failed to add the Address : " + response.code().toString(),
+                            R.string.add_address_fail,
                             Toast.LENGTH_SHORT
                         ).show()
                         finish()
@@ -243,7 +245,7 @@ class AddAddressesActivity : AppCompatActivity() {
      */
     private fun validateName(): Boolean {
         return if (name.text.toString().isBlank()) {
-            name_input_layout.error = "Enter a proper name"
+            name_input_layout.error = resources.getString(R.string.proper_name)
             name.requestFocus()
             false
         } else {
@@ -257,7 +259,7 @@ class AddAddressesActivity : AppCompatActivity() {
      */
     private fun validateAddress1(): Boolean {
         return if (add1.text.toString().isBlank()) {
-            add1_input_layout.error = "Enter a proper Address"
+            add1_input_layout.error = resources.getString(R.string.proper_address)
             add1.requestFocus()
             false
         } else {
@@ -270,8 +272,8 @@ class AddAddressesActivity : AppCompatActivity() {
     A Boolean function to validate the Address Line 2 field
      */
     private fun validateAddress2(): Boolean {
-        return if (add1.text.toString().isBlank()) {
-            add2_input_layout.error = "Enter a proper Address"
+        return if (add2.text.toString().isBlank()) {
+            add2_input_layout.error = resources.getString(R.string.proper_address)
             add2.requestFocus()
             false
         } else {
@@ -285,7 +287,7 @@ class AddAddressesActivity : AppCompatActivity() {
      */
     private fun validateCity(): Boolean {
         return if (city.text.toString().isBlank()) {
-            city_input_layout.error = "Enter a proper City"
+            city_input_layout.error = resources.getString(R.string.proper_city)
             city.requestFocus()
             false
         } else {
@@ -299,7 +301,7 @@ class AddAddressesActivity : AppCompatActivity() {
      */
     private fun validateState(): Boolean {
         return if (state.text.toString().isBlank()) {
-            state_input_layout.error = "Enter a proper State"
+            state_input_layout.error = resources.getString(R.string.proper_state)
             state.requestFocus()
             false
         } else {
@@ -313,7 +315,7 @@ class AddAddressesActivity : AppCompatActivity() {
      */
     private fun validatePincode(): Boolean {
         return if (pincode.text.toString().length != 6) {
-            pincode_input_layout.error = "Enter a proper Pincode of six digits"
+            pincode_input_layout.error = resources.getString(R.string.proper_pincode)
             pincode.requestFocus()
             false
         } else {
@@ -353,12 +355,13 @@ class AddAddressesActivity : AppCompatActivity() {
      */
     private fun EditText.onChange(cb: (String) -> Unit) {
         this.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                cb(s.toString())
-            }
-
+            override fun afterTextChanged(s: Editable?) {}
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (start != 0) {
+                    cb(s.toString())
+                }
+            }
         })
     }
 

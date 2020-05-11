@@ -83,7 +83,6 @@ class AddressesActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.setting_update -> {
                     updateAddress(address.id, address, position)
-                    address_recycler.adapter?.notifyItemChanged(position)
                     true
                 }
 
@@ -113,7 +112,7 @@ class AddressesActivity : AppCompatActivity() {
             override fun onFailure(call: Call<Unit>, t: Throwable) {
                 Toast.makeText(
                     this@AddressesActivity,
-                    "Failed to Delete Address",
+                    R.string.delete_address_fail,
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -122,19 +121,27 @@ class AddressesActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     Toast.makeText(
                         this@AddressesActivity,
-                        "Address Deleted Successfully",
+                        R.string.delete_address_success,
                         Toast.LENGTH_SHORT
                     ).show()
                     if (id == DEFAULT_ID) {
                         DEFAULT_ID = 0
+                        val defaultSharedPref =
+                            getSharedPreferences(DEFAULT_SHARED_PREF, Context.MODE_PRIVATE)
+                        val editor = defaultSharedPref.edit()
+                        editor.putInt(DEFAULT_KEY, DEFAULT_ID)
+                        editor.apply()
                     }
                     listOfAddress.removeAt(position)
-                    address_recycler.adapter?.notifyDataSetChanged()
+                    adapter.setList(listOfAddress)
+                    address_recycler.adapter = adapter
+                    showFab()
                     progress_circular_address.isVisible = false
+
                 } else {
                     Toast.makeText(
                         this@AddressesActivity,
-                        "Failed to Delete Address : " + response.code().toString(),
+                        R.string.delete_address_fail,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -149,7 +156,7 @@ class AddressesActivity : AppCompatActivity() {
     private fun updateAddress(id: Int, address: Address, position: Int) {
         val intent = Intent(this, AddAddressesActivity::class.java)
         intent.putExtra(ADDRESS_KEY, address)
-        intent.putExtra(INTENT_KEY, false)
+        intent.putExtra(IS_ADD, false)
         intent.putExtra(ADDRESS_ID, id)
         intent.putExtra(ADDRESS_POSITION, position)
         startActivityForResult(intent, REQUEST_CODE)
@@ -176,7 +183,7 @@ class AddressesActivity : AppCompatActivity() {
             override fun onFailure(call: Call<MutableList<Address>>, t: Throwable) {
                 Toast.makeText(
                     this@AddressesActivity,
-                    "Failed to load addresses",
+                    R.string.load_address_fail,
                     Toast.LENGTH_SHORT
                 ).show()
                 listLoaded = false
@@ -197,7 +204,7 @@ class AddressesActivity : AppCompatActivity() {
                     listLoaded = false
                     Toast.makeText(
                         this@AddressesActivity,
-                        "Failed to load addresses : " + response.code().toString(),
+                        R.string.load_address_fail,
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -230,7 +237,7 @@ class AddressesActivity : AppCompatActivity() {
     */
     fun onFabClick(view: View) {
         val intent = Intent(this, AddAddressesActivity::class.java)
-        intent.putExtra(INTENT_KEY, true)
+        intent.putExtra(IS_ADD, true)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivityForResult(intent, REQUEST_CODE)
     }
@@ -263,7 +270,7 @@ class AddressesActivity : AppCompatActivity() {
         //DEFAULT_ID is set to 0 if there is no address saved as a default address
         var DEFAULT_ID = 0
         const val REQUEST_CODE = 100
-        const val INTENT_KEY = "isAdd"
+        const val IS_ADD = "isAdd"
         private const val ADDRESS_LIST = "addressList"
         private var listLoaded: Boolean = false
         const val ADDRESS_ID = "id"

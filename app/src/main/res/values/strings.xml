@@ -14,4 +14,17 @@
     <string name="add_line_2">Your Address Line 2</string>
     <string name="update">Update</string>
     <string name="delete">Delete</string>
+    <string name="update_address_fail">Failed to Update the Address</string>
+    <string name="update_address_success">Address updated Successfully</string>
+    <string name="add_address_fail">Failed to add the Address</string>
+    <string name="add_address_success">Address added Successfully</string>
+    <string name="delete_address_fail">Failed to Delete Address</string>
+    <string name="delete_address_success">Address has been successfully deleted</string>
+    <string name="load_address_fail">Failed to load address</string>
+    <string name="load_address_success">Addresses loaded successfully</string>
+    <string name="proper_name">Enter a proper name</string>
+    <string name="proper_address">Enter a proper address</string>
+    <string name="proper_city">Enter a proper City</string>
+    <string name="proper_state">Enter a proper State</string>
+    <string name="proper_pincode">Enter a proper Pincode of six digits</string>
 </resources>
