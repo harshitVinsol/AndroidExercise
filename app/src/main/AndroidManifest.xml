@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.androidexercise">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -13,7 +14,9 @@
         android:fullBackupContent="true">
         <activity android:name=".AddAddressesActivity"
             android:parentActivityName=".AddressesActivity"
-            android:label="Add Address"/>
+            android:screenOrientation="portrait"
+            android:label="Add Address"
+            tools:ignore="LockedOrientationActivity" />
         <activity android:name=".AddressesActivity"
             android:label="Addresses"/>
         <activity android:name=".SplashActivity"

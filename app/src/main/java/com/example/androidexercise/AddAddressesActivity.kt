@@ -30,13 +30,11 @@ An activity to Add and Update the Addresses
  */
 class AddAddressesActivity : AppCompatActivity() {
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_addresses)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         showAddButton()
         val isAdd = intent.getBooleanExtra(IS_ADD, true)
         val id = intent.getIntExtra(ADDRESS_ID, 0)
