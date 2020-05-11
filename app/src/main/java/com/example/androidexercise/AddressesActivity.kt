@@ -14,6 +14,7 @@ import com.example.androidexercise.AddAddressesActivity.Companion.ADDED_ADDRESS
 import com.example.androidexercise.AddAddressesActivity.Companion.ADDED_CODE
 import com.example.androidexercise.AddAddressesActivity.Companion.DEFAULT_KEY
 import com.example.androidexercise.AddAddressesActivity.Companion.DEFAULT_SHARED_PREF
+import com.example.androidexercise.AddAddressesActivity.Companion.IS_DEFAULT_KEY
 import com.example.androidexercise.AddAddressesActivity.Companion.UPDATED_CODE
 import com.example.androidexercise.adapters.AddressAdapter
 import com.example.androidexercise.adapters.ViewHolder
@@ -22,6 +23,7 @@ import com.example.androidexercise.services.AddressService
 import com.example.androidexercise.services.ServiceBuilder
 import kotlinx.android.synthetic.main.activity_addresses.*
 import kotlinx.android.synthetic.main.item_address.*
+import kotlinx.android.synthetic.main.item_address.view.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,6 +46,7 @@ class AddressesActivity : AppCompatActivity() {
             AddressAdapter(listOfAddress) { address: Address, position: Int, holder: ViewHolder ->
                 createSettingsPopupMenu(address, position, holder)
             }
+
         if (savedInstanceState == null || !listLoaded) {
             progress_circular_address.isVisible = true
             loadAddress()
@@ -54,9 +57,11 @@ class AddressesActivity : AppCompatActivity() {
             address_recycler.adapter = adapter
             showFab()
         }
-        //showFab()
     }
 
+    /*
+    A function to show the FAB at center if the size of listOfAddress is 0 and FAB at bottom right if size of listOfAddress is not 0
+     */
     private fun showFab() {
         if (listOfAddress.size == 0) {
             changeFabToCenter()
@@ -86,7 +91,7 @@ class AddressesActivity : AppCompatActivity() {
                     progress_circular_address.isVisible = true
                     if (address.id == DEFAULT_ID) {
                         DEFAULT_ID = 0
-                        default_tick.isInvisible = true
+                        default_tick.isVisible = false
                     }
                     deleteAddress(address.id, position)
                     true
@@ -126,7 +131,6 @@ class AddressesActivity : AppCompatActivity() {
                     listOfAddress.removeAt(position)
                     address_recycler.adapter?.notifyDataSetChanged()
                     progress_circular_address.isVisible = false
-                    showFab()
                 } else {
                     Toast.makeText(
                         this@AddressesActivity,
@@ -144,7 +148,6 @@ class AddressesActivity : AppCompatActivity() {
      */
     private fun updateAddress(id: Int, address: Address, position: Int) {
         val intent = Intent(this, AddAddressesActivity::class.java)
-        //intent.flags = (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra(ADDRESS_KEY, address)
         intent.putExtra(INTENT_KEY, false)
         intent.putExtra(ADDRESS_ID, id)
@@ -232,20 +235,27 @@ class AddressesActivity : AppCompatActivity() {
         startActivityForResult(intent, REQUEST_CODE)
     }
 
+    /*
+    onActivityResult() to check the results of update and add intent and assign updated listOfAddress to the adapter
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE && resultCode == ADDED_CODE) {
-            val addedAddress = data!!.getParcelableExtra<Address>(ADDED_ADDRESS)
+        if (requestCode == REQUEST_CODE && resultCode == ADDED_CODE && data != null) {
+            val addedAddress = data.getParcelableExtra<Address>(ADDED_ADDRESS)
+            DEFAULT_ID = data.getIntExtra(IS_DEFAULT_KEY, 0)
             listOfAddress.add(addedAddress!!)
             adapter.setList(listOfAddress)
             address_recycler.adapter = adapter
             showFab()
-        } else if (requestCode == REQUEST_CODE && resultCode == UPDATED_CODE) {
-            val addedAddress = data!!.getParcelableExtra<Address>(ADDED_ADDRESS)
+        } else if (requestCode == REQUEST_CODE && resultCode == UPDATED_CODE && data != null) {
+            val addedAddress = data.getParcelableExtra<Address>(ADDED_ADDRESS)
+            DEFAULT_ID = data.getIntExtra(IS_DEFAULT_KEY, 0)
             val position = data.getIntExtra(ADDRESS_POSITION, 0)
-            listOfAddress[position] = addedAddress!!
-            adapter.setList(listOfAddress)
-            address_recycler.adapter = adapter
+            if (addedAddress != null) {
+                listOfAddress[position] = addedAddress
+                adapter.setList(listOfAddress)
+                address_recycler.adapter = adapter
+            }
         }
     }
 

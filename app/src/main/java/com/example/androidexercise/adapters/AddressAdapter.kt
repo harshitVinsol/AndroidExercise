@@ -51,9 +51,8 @@ class AddressAdapter(
         /*
         To check if the Address is Default Address and set default tick visible if true
          */
-        if (address.id == DEFAULT_ID) {
-            holder.defaultAddress.isVisible = true
-        }
+        holder.defaultAddress.isVisible = address.id == DEFAULT_ID
+
         holder.settingsButton.setOnClickListener {
             callback.invoke(address, position, holder)
         }
@@ -61,7 +60,7 @@ class AddressAdapter(
 }
 
 class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val textAddress = itemView.findViewById<TextView>(R.id.text_address)
-    val defaultAddress = itemView.findViewById<ImageView>(R.id.default_tick)
-    val settingsButton = itemView.findViewById<ImageButton>(R.id.settings_button)
+    val textAddress: TextView = itemView.findViewById(R.id.text_address)
+    val defaultAddress: ImageView = itemView.findViewById(R.id.default_tick)
+    val settingsButton: ImageButton = itemView.findViewById(R.id.settings_button)
 }

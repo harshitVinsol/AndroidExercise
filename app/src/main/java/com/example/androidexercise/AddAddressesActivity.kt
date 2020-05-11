@@ -46,7 +46,6 @@ class AddAddressesActivity : AppCompatActivity() {
          */
         button_add.setOnClickListener {
             validateAll()
-
             if (isAdd) {
                 addAddress()
             } else {
@@ -119,6 +118,7 @@ class AddAddressesActivity : AppCompatActivity() {
                         if (check_default.isChecked) {
                             val defaultValue = newAddress?.id
                             if (defaultValue != null) {
+                                DEFAULT_ID = defaultValue
                                 editor.putInt(DEFAULT_KEY, defaultValue)
                                 editor.apply()
                             }
@@ -130,6 +130,7 @@ class AddAddressesActivity : AppCompatActivity() {
                         val intent = Intent()
                         intent.putExtra(ADDED_ADDRESS, newAddress)
                         intent.putExtra(ADDRESS_POSITION, position)
+                        intent.putExtra(IS_DEFAULT_KEY, DEFAULT_ID)
                         setResult(UPDATED_CODE, intent)
                         finish()
                     } else {
@@ -138,6 +139,7 @@ class AddAddressesActivity : AppCompatActivity() {
                             "Failed to update the Address : " + response.code().toString(),
                             Toast.LENGTH_SHORT
                         ).show()
+                        finish()
                     }
                 }
             })
@@ -205,12 +207,14 @@ class AddAddressesActivity : AppCompatActivity() {
                                 getSharedPreferences(DEFAULT_SHARED_PREF, Context.MODE_PRIVATE)
                             val editor = defaultSharedPref.edit()
                             if (defaultValue != null) {
+                                DEFAULT_ID = defaultValue
                                 editor.putInt(DEFAULT_KEY, defaultValue)
                                 editor.apply()
                             }
                         }
                         val intent = Intent()
                         intent.putExtra(ADDED_ADDRESS, newAddress)
+                        intent.putExtra(IS_DEFAULT_KEY, DEFAULT_ID)
                         setResult(ADDED_CODE, intent)
                         finish()
                     } else {
@@ -219,6 +223,7 @@ class AddAddressesActivity : AppCompatActivity() {
                             "Failed to add the Address : " + response.code().toString(),
                             Toast.LENGTH_SHORT
                         ).show()
+                        finish()
                     }
                 }
             })
@@ -237,13 +242,13 @@ class AddAddressesActivity : AppCompatActivity() {
     A Boolean function to validate the name field
      */
     private fun validateName(): Boolean {
-        if (name.text.toString().isBlank()) {
+        return if (name.text.toString().isBlank()) {
             name_input_layout.error = "Enter a proper name"
             name.requestFocus()
-            return false
+            false
         } else {
             name_input_layout.error = null
-            return true
+            true
         }
     }
 
@@ -251,13 +256,13 @@ class AddAddressesActivity : AppCompatActivity() {
     A Boolean function to validate the Address Line 1 field
      */
     private fun validateAddress1(): Boolean {
-        if (add1.text.toString().isBlank()) {
+        return if (add1.text.toString().isBlank()) {
             add1_input_layout.error = "Enter a proper Address"
             add1.requestFocus()
-            return false
+            false
         } else {
             add1_input_layout.error = null
-            return true
+            true
         }
     }
 
@@ -265,13 +270,13 @@ class AddAddressesActivity : AppCompatActivity() {
     A Boolean function to validate the Address Line 2 field
      */
     private fun validateAddress2(): Boolean {
-        if (add1.text.toString().isBlank()) {
+        return if (add1.text.toString().isBlank()) {
             add2_input_layout.error = "Enter a proper Address"
             add2.requestFocus()
-            return false
+            false
         } else {
             add2_input_layout.error = null
-            return true
+            true
         }
     }
 
@@ -279,13 +284,13 @@ class AddAddressesActivity : AppCompatActivity() {
     A Boolean function to validate the City field
      */
     private fun validateCity(): Boolean {
-        if (city.text.toString().isBlank()) {
+        return if (city.text.toString().isBlank()) {
             city_input_layout.error = "Enter a proper City"
             city.requestFocus()
-            return false
+            false
         } else {
             city_input_layout.error = null
-            return true
+            true
         }
     }
 
@@ -293,13 +298,13 @@ class AddAddressesActivity : AppCompatActivity() {
     A Boolean function to validate the State field
      */
     private fun validateState(): Boolean {
-        if (state.text.toString().isBlank()) {
+        return if (state.text.toString().isBlank()) {
             state_input_layout.error = "Enter a proper State"
             state.requestFocus()
-            return false
+            false
         } else {
             state_input_layout.error = null
-            return true
+            true
         }
     }
 
@@ -307,13 +312,13 @@ class AddAddressesActivity : AppCompatActivity() {
     A Boolean function to validate the Pincode field
      */
     private fun validatePincode(): Boolean {
-        if (pincode.text.toString().length != 6) {
+        return if (pincode.text.toString().length != 6) {
             pincode_input_layout.error = "Enter a proper Pincode of six digits"
             pincode.requestFocus()
-            return false
+            false
         } else {
             pincode_input_layout.error = null
-            return true
+            true
         }
     }
 
@@ -413,6 +418,7 @@ class AddAddressesActivity : AppCompatActivity() {
         const val DEFAULT_SHARED_PREF = "DefaultKeySharedPref"
         const val DEFAULT_KEY = "DefaultKey"
         const val ADDED_ADDRESS = "addedAddress"
+        const val IS_DEFAULT_KEY = "isDefault"
         const val ADDED_CODE = 101
         const val UPDATED_CODE = 102
     }
